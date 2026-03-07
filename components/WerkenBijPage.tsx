@@ -1,0 +1,180 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import LineSplit from "@/components/LineSplit";
+import { usePageNavigation } from "@/hooks/usePageNavigation";
+import { vacatures as defaultVacatures } from "@/data/vacatures";
+
+interface WerkenBijVacature {
+  slug: string;
+  title: string;
+  shortDescription: string;
+}
+
+interface WerkenBijPageData {
+  heroTitle?: string;
+  vacatures?: WerkenBijVacature[];
+}
+
+export default function WerkenBijPage({ data }: { data?: WerkenBijPageData } = {}) {
+  const vacatures = data?.vacatures ?? defaultVacatures;
+  const [animate, setAnimate] = useState(false);
+  const navigate = usePageNavigation();
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setAnimate(true);
+      return;
+    }
+
+    if (window.__pageTransitioning) {
+      const timer = setTimeout(() => setAnimate(true), 550);
+      return () => clearTimeout(timer);
+    }
+
+    let rafOuter = 0;
+    let rafInner = 0;
+    rafOuter = requestAnimationFrame(() => {
+      rafInner = requestAnimationFrame(() => setAnimate(true));
+    });
+    return () => {
+      cancelAnimationFrame(rafOuter);
+      cancelAnimationFrame(rafInner);
+    };
+  }, []);
+
+  // Each vacature row gets enough time for its content to cascade in
+  // before the next row starts — keeps it fluid and sequential
+  const rowStagger = 0.25;
+  const rowBaseDelay = 0.25;
+
+  return (
+    <section className="bg-off-white min-h-screen">
+      {/* Hero title */}
+      <div className="pt-[13.194vw] px-[2.431vw] pb-[6.944vw] max-md:pt-[28vw] max-md:px-5 max-md:pb-10">
+        <div className="overflow-hidden">
+          <h1
+            className="font-heading font-normal text-[5.556vw] leading-normal tracking-[-0.111vw] text-off-black max-md:text-[40px] max-md:tracking-[-0.8px] will-change-transform"
+            style={{
+              transform: animate ? "translateY(0)" : "translateY(110%)",
+              transition: animate
+                ? "transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s"
+                : "none",
+            }}
+          >
+            {data?.heroTitle ?? "Werken bij Weverkade"}
+          </h1>
+        </div>
+      </div>
+
+      {/* Vacatures table */}
+      <div className="px-[2.431vw] max-md:px-5">
+        {/* Column headers */}
+        <div className="flex max-md:hidden">
+          <div className="w-[33.333%] pl-[14.236vw]">
+            <p
+              className="font-body font-medium text-[1.389vw] leading-normal text-off-black will-change-transform"
+              style={{
+                opacity: animate ? 1 : 0,
+                transform: animate ? "translateY(0)" : "translateY(1.389vw)",
+                transition: animate
+                  ? "opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s"
+                  : "none",
+              }}
+            >
+              Vacature titel
+            </p>
+          </div>
+          <div className="flex-1 pl-[2.778vw]">
+            <p
+              className="font-body font-medium text-[1.389vw] leading-normal text-off-black will-change-transform"
+              style={{
+                opacity: animate ? 1 : 0,
+                transform: animate ? "translateY(0)" : "translateY(1.389vw)",
+                transition: animate
+                  ? "opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s"
+                  : "none",
+              }}
+            >
+              Omschrijving
+            </p>
+          </div>
+        </div>
+
+        {/* Vacature rows */}
+        <div className="mt-[2.083vw] max-md:mt-4">
+          {vacatures.map((vacature, index) => {
+            const delay = rowBaseDelay + index * rowStagger;
+
+            return (
+              <div
+                key={vacature.slug}
+                className="border-t border-off-black/20 last:border-b"
+                style={{
+                  opacity: animate ? 1 : 0,
+                  transition: animate
+                    ? `opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`
+                    : "none",
+                }}
+              >
+                <div className="flex py-[2.778vw] max-md:flex-col max-md:py-6">
+                  {/* Vacature title */}
+                  <div className="w-[33.333%] pl-[14.236vw] max-md:w-full max-md:pl-0 max-md:mb-4">
+                    <div className="overflow-hidden">
+                      <p
+                        className="font-heading font-normal text-[1.389vw] leading-normal text-off-black max-md:text-[20px] will-change-transform"
+                        style={{
+                          transform: animate
+                            ? "translateY(0)"
+                            : "translateY(110%)",
+                          transition: animate
+                            ? `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${delay + 0.04}s`
+                            : "none",
+                        }}
+                      >
+                        {vacature.title}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Description + link */}
+                  <div className="flex-1 pl-[2.778vw] max-md:pl-0">
+                    <LineSplit
+                      animate={animate}
+                      delay={delay + 0.08}
+                      stagger={0.06}
+                      className="font-body font-medium text-[1.25vw] leading-[1.528vw] text-off-black max-w-[31.389vw] max-md:text-[16px] max-md:leading-[22px] max-md:max-w-none"
+                    >
+                      {vacature.shortDescription}
+                    </LineSplit>
+
+                    <div className="mt-[1.389vw] max-md:mt-4">
+                      <a
+                        href={`/werken-bij/${vacature.slug}`}
+                        onClick={(e) =>
+                          navigate(e, `/werken-bij/${vacature.slug}`)
+                        }
+                        className="link-underline font-body font-medium text-[0.972vw] leading-normal text-off-black pb-[0.347vw] max-md:text-[14px] max-md:pb-1"
+                        style={{
+                          opacity: animate ? 1 : 0,
+                          transition: animate
+                            ? `opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${delay + 0.18}s`
+                            : "none",
+                        }}
+                      >
+                        Naar vacature
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Bottom spacing */}
+      <div className="pb-[11.111vw] max-md:pb-16" />
+    </section>
+  );
+}

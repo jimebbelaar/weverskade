@@ -1,65 +1,118 @@
-import Image from "next/image";
+import Hero from "@/components/Hero";
+import Intro from "@/components/Intro";
+import Portfolio from "@/components/Portfolio";
+import Impact from "@/components/Impact";
+import News from "@/components/News";
+import Footer from "@/components/Footer";
+import { sanityFetch } from "@/sanity/lib/fetch";
+import {
+  HOME_PAGE_QUERY,
+  FOOTER_QUERY,
+  ALL_NIEUWS_QUERY,
+} from "@/sanity/lib/queries";
+import { sanityImageUrl } from "@/sanity/lib/helpers";
 
-export default function Home() {
+export default async function Home() {
+  const [homeData, footerData, newsData] = await Promise.all([
+    sanityFetch<any>({ query: HOME_PAGE_QUERY, tags: ["homePage"] }),
+    sanityFetch<any>({ query: FOOTER_QUERY, tags: ["footer"] }),
+    sanityFetch<any>({ query: ALL_NIEUWS_QUERY, tags: ["nieuwsArtikel"] }),
+  ]);
+
+  const heroProps = homeData
+    ? {
+        title: homeData.heroTitle,
+        subtitle: homeData.heroSubtitle,
+        backgroundImage: sanityImageUrl(homeData.heroImage, "/images/hero-bg.png"),
+      }
+    : undefined;
+
+  const introProps = homeData
+    ? {
+        heading: homeData.introHeading,
+        text: homeData.introText,
+        linkText: homeData.introLinkText,
+        linkUrl: homeData.introLinkUrl,
+        image: sanityImageUrl(homeData.introImage, "/images/small-plant.jpg"),
+      }
+    : undefined;
+
+  const portfolioProps =
+    homeData?.featuredProjects?.length > 0
+      ? {
+          label: homeData.portfolioLabel,
+          heading: homeData.portfolioHeading,
+          linkText: homeData.portfolioLinkText,
+          linkUrl: homeData.portfolioLinkUrl,
+          projects: homeData.featuredProjects.map((p: any) => ({
+            image: sanityImageUrl(p.portfolioImage, "/images/portfolio-1.png"),
+            title: p.name,
+            subtitle: p.tagline,
+          })),
+        }
+      : undefined;
+
+  const impactProps = homeData
+    ? {
+        label: homeData.impactLabel,
+        heading: homeData.impactHeading,
+        words: homeData.impactWords,
+        description: homeData.impactDescription,
+        linkText: homeData.impactLinkText,
+        linkUrl: homeData.impactLinkUrl,
+        images: homeData.impactImages?.map((img: any, i: number) => ({
+          src: sanityImageUrl(img, ["/images/portfolio-3.png", "/images/portfolio-2.png", "/images/nature.jpg"][i] || "/images/portfolio-1.png"),
+          index: i,
+        })),
+      }
+    : undefined;
+
+  const newsProps =
+    newsData?.length > 0
+      ? {
+          label: homeData?.newsLabel,
+          heading: homeData?.newsHeading,
+          articles: newsData.slice(0, 3).map((a: any) => ({
+            date: a.date,
+            title: a.title,
+            image: sanityImageUrl(a.heroImage, "/images/news-placeholder.png"),
+            slug: a.slug?.current,
+          })),
+        }
+      : undefined;
+
+  const footerProps = footerData
+    ? {
+        companyName: footerData.companyName,
+        address: footerData.address,
+        postalCode: footerData.postalCode,
+        country: footerData.country,
+        phone: footerData.phone,
+        email: footerData.email,
+        links: footerData.links,
+      }
+    : undefined;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <>
+      <div data-nav-theme="dark">
+        <Hero data={heroProps} />
+      </div>
+      <div data-nav-theme="light">
+        <Intro data={introProps} />
+      </div>
+      <div data-nav-theme="light">
+        <Portfolio data={portfolioProps} />
+      </div>
+      <div data-nav-theme="green">
+        <Impact data={impactProps} />
+      </div>
+      <div data-nav-theme="light">
+        <News data={newsProps} />
+      </div>
+      <div data-nav-theme="blue">
+        <Footer data={footerProps} />
+      </div>
+    </>
   );
 }
