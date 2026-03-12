@@ -1,23 +1,28 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
 import { usePortfolioSlider } from "@/hooks/usePortfolioSlider";
+import { usePageNavigation } from "@/hooks/usePageNavigation";
 
 const defaultProjects = [
   {
-    image: "/images/portfolio-1.png",
+    image: "/images/portfolio-1.webp",
     title: "Nieuwemarkt Rotterdam",
     subtitle: "In het hart van de stad",
+    slug: "nieuwemarkt-rotterdam",
   },
   {
-    image: "/images/portfolio-2.png",
+    image: "/images/portfolio-2.webp",
     title: "The new citizen",
     subtitle: "Dichtbij alles",
+    slug: "the-new-citizen",
   },
   {
-    image: "/images/portfolio-3.png",
+    image: "/images/portfolio-3.webp",
     title: "De Drie Lelies",
     subtitle: "Historie in het Maaslands erfgoed",
+    slug: "de-drie-lelies",
   },
 ];
 
@@ -26,7 +31,7 @@ interface PortfolioData {
   heading?: string;
   linkText?: string;
   linkUrl?: string;
-  projects?: { image: string; title: string; subtitle: string }[];
+  projects?: { image: string; title: string; subtitle: string; slug?: string }[];
 }
 
 export default function Portfolio({ data }: { data?: PortfolioData } = {}) {
@@ -35,13 +40,19 @@ export default function Portfolio({ data }: { data?: PortfolioData } = {}) {
   const cards = [...projects, ...projects, ...projects];
   const { currentPage, totalPages, trackRef, nextPage } =
     usePortfolioSlider(cards.length);
+  const navigate = usePageNavigation();
+  const draggedRef = useRef(false);
+  const pointerStartRef = useRef({ x: 0, y: 0 });
+
+  const portfolioUrl = data?.linkUrl ?? "/portefeuille";
 
   return (
     <section className="bg-off-white px-[2.431vw] pb-[13.194vw] overflow-hidden max-md:px-5 max-md:pb-16">
       {/* Header row */}
       <div className="flex justify-between items-baseline pt-[1.389vw] pb-[1.806vw] max-md:hidden">
         <a
-          href="#"
+          href={portfolioUrl}
+          onClick={(e) => navigate(e, portfolioUrl)}
           className="link-underline font-body font-medium text-[1.389vw] leading-[1.2] text-off-black pb-[0.486vw]"
         >
           {data?.linkText ?? "Bekijk gehele portefeuille"}
@@ -86,30 +97,55 @@ export default function Portfolio({ data }: { data?: PortfolioData } = {}) {
           ref={trackRef}
           className="grid grid-cols-[repeat(9,30.787vw)] gap-[1.389vw] transition-transform duration-600 ease-[cubic-bezier(0.25,0.1,0.25,1)] max-md:grid-cols-[repeat(9,calc(100vw-40px))] max-md:gap-5"
         >
-          {cards.map((card, i) => (
-            <div key={i} data-card>
-              <div className="w-full aspect-[443/479] overflow-hidden max-md:aspect-[362/340]">
-                <Image
-                  src={card.image}
-                  alt={card.title}
-                  width={2400}
-                  height={1800}
-                  sizes="(max-width: 768px) calc(100vw - 40px), 30.787vw"
-                  quality={100}
-                  draggable={false}
-                  className="w-full h-full object-cover object-center pointer-events-none"
-                />
-              </div>
-              <div className="pt-[0.486vw] max-md:pt-2">
-                <p className="font-body font-medium text-[1.389vw] leading-[1.597vw] text-off-black max-md:text-[20px] max-md:leading-normal">
-                  {card.title}
-                </p>
-                <p className="font-body font-medium text-[1.389vw] leading-[1.597vw] text-off-black max-md:text-[20px] max-md:leading-normal">
-                  {card.subtitle}
-                </p>
-              </div>
-            </div>
-          ))}
+          {cards.map((card, i) => {
+            const cardUrl = card.slug ? `/gebouw/${card.slug}` : undefined;
+            return (
+              <a
+                key={i}
+                data-card
+                href={cardUrl ?? "#"}
+                onClick={(e) => {
+                  if (!cardUrl || draggedRef.current) {
+                    e.preventDefault();
+                    return;
+                  }
+                  navigate(e, cardUrl);
+                }}
+                onPointerDown={(e) => {
+                  draggedRef.current = false;
+                  pointerStartRef.current = { x: e.clientX, y: e.clientY };
+                }}
+                onPointerMove={(e) => {
+                  const dx = Math.abs(e.clientX - pointerStartRef.current.x);
+                  const dy = Math.abs(e.clientY - pointerStartRef.current.y);
+                  if (dx > 5 || dy > 5) draggedRef.current = true;
+                }}
+                className="block cursor-pointer"
+                draggable={false}
+              >
+                <div className="w-full aspect-[443/479] overflow-hidden max-md:aspect-[362/340]">
+                  <Image
+                    src={card.image}
+                    alt={card.title}
+                    width={2400}
+                    height={1800}
+                    sizes="(max-width: 768px) calc(100vw - 40px), 30.787vw"
+                    quality={100}
+                    draggable={false}
+                    className="w-full h-full object-cover object-center pointer-events-none"
+                  />
+                </div>
+                <div className="pt-[0.486vw] max-md:pt-2">
+                  <p className="font-body font-medium text-[1.389vw] leading-[1.597vw] text-off-black max-md:text-[20px] max-md:leading-normal">
+                    {card.title}
+                  </p>
+                  <p className="font-body font-medium text-[1.389vw] leading-[1.597vw] text-off-black max-md:text-[20px] max-md:leading-normal">
+                    {card.subtitle}
+                  </p>
+                </div>
+              </a>
+            );
+          })}
         </div>
       </div>
 

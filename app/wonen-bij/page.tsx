@@ -37,7 +37,7 @@ export default async function WonenBij() {
             tagline: p.tagline ?? "",
             type: p.wonenBeschikbaar ? "Beschikbaar" : "In ontwikkeling",
             location: p.location ?? "",
-            image: sanityImageUrl(p.portfolioImage, "/images/portfolio-card-1.jpg"),
+            image: sanityImageUrl(p.portfolioImage, "/images/portfolio-card-1.webp"),
           })),
         }
       : undefined;

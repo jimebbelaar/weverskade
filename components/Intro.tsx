@@ -14,7 +14,7 @@ export default function Intro({ data }: { data?: IntroData } = {}) {
       {/* Plant image — hidden on mobile */}
       <div className="w-[12.847vw] h-[16.389vw] ml-[32.083vw] overflow-hidden max-md:hidden">
         <Image
-          src={data?.image ?? "/images/small-plant.jpg"}
+          src={data?.image ?? "/images/small-plant.webp"}
           alt="Groene plant"
           width={1373}
           height={800}

@@ -72,7 +72,7 @@ export default function ContactPage({ data }: { data?: ContactPageData } = {}) {
             }}
           >
             <Image
-              src={data?.heroImage ?? "/images/contact-team.jpg"}
+              src={data?.heroImage ?? "/images/contact-team.webp"}
               alt="Team Weverskade"
               fill
               sizes="(max-width: 768px) 100vw, 31.319vw"

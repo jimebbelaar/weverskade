@@ -4,9 +4,9 @@ import Image from "next/image";
 import { useImpactScroll } from "@/hooks/useImpactScroll";
 
 const fallbackImages = [
-  { src: "/images/portfolio-3.png", index: 0 },
-  { src: "/images/portfolio-2.png", index: 1 },
-  { src: "/images/nature.jpg", index: 2 },
+  { src: "/images/portfolio-3.webp", index: 0 },
+  { src: "/images/portfolio-2.webp", index: 1 },
+  { src: "/images/nature.webp", index: 2 },
 ];
 
 const defaultWords = ["natuur", "mens", "ruimte"];
@@ -27,8 +27,8 @@ export default function Impact({ data }: { data?: ImpactData } = {}) {
   const { scrollRef, innerRef, wheelTrackRef, circleRef } = useImpactScroll();
 
   return (
-    <div ref={scrollRef} className="h-[200vh] relative">
-      <section className="sticky top-0 h-dvh w-full overflow-hidden">
+    <div ref={scrollRef} className="h-[200vh] relative pointer-events-none">
+      <section className="sticky top-0 h-dvh w-full overflow-hidden pointer-events-auto">
         {/* Green background */}
         <div className="absolute inset-0 bg-green z-0" />
 
@@ -37,7 +37,7 @@ export default function Impact({ data }: { data?: ImpactData } = {}) {
           className="absolute inset-0 z-1 origin-[0_0]"
         >
           {/* Left label */}
-          <p className="absolute z-2 top-[13.333vw] left-[10.486vw] font-body font-medium text-[1.389vw] leading-[1.2] text-off-white max-md:top-[6.5%] max-md:left-[6.2vw] max-md:text-[17px]">
+          <p className="absolute z-2 top-[13.333vw] left-[10.486vw] font-body font-medium text-[1.389vw] leading-[1.2] text-off-white max-w-[15vw] max-md:top-[6.5%] max-md:left-[6.2vw] max-md:text-[17px] max-md:max-w-[46vw]">
             {data?.label ?? <>Maatschappelijk en<br />sociaal betrokken</>}
           </p>
 

@@ -8,19 +8,19 @@ const defaultArticles = [
   {
     date: "22 januari, 2026",
     title: "Hier een header van het bericht in max twee zinnen",
-    image: "/images/news-placeholder.png",
+    image: "/images/news-placeholder.webp",
     slug: "",
   },
   {
     date: "22 januari, 2026",
     title: "Hier een header van het bericht in max twee zinnen",
-    image: "/images/news-placeholder.png",
+    image: "/images/news-placeholder.webp",
     slug: "",
   },
   {
     date: "22 januari, 2026",
     title: "Hier een header van het bericht in max twee zinnen",
-    image: "/images/news-placeholder.png",
+    image: "/images/news-placeholder.webp",
     slug: "",
   },
 ];
@@ -50,7 +50,7 @@ export default function News({ data }: { data?: NewsData } = {}) {
           {data?.heading ?? "Van Weverskade"}
         </span>
         <a
-          href="#"
+          href="/nieuws"
           className="link-underline shrink-0 font-body font-medium text-[1.389vw] leading-[1.2] text-off-black pb-[0.556vw]"
             style={{ "--underline-h": "0.069vw" } as React.CSSProperties}
         >
@@ -82,7 +82,7 @@ export default function News({ data }: { data?: NewsData } = {}) {
                   {article.title}
                 </h3>
                 <a
-                  href="#"
+                  href={article.slug ? `/nieuws/${article.slug}` : "/nieuws"}
                   className="link-underline mt-[1.944vw] font-body font-medium text-[0.972vw] leading-normal text-off-black pb-[0.417vw]"
                   style={{ "--underline-h": "0.069vw" } as React.CSSProperties}
                 >
@@ -118,7 +118,7 @@ export default function News({ data }: { data?: NewsData } = {}) {
             className="grid grid-cols-[repeat(3,calc(100vw-40px))] gap-5 transition-transform duration-600 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
           >
             {articles.map((article, i) => (
-              <div key={i} data-card>
+              <a key={i} data-card href={article.slug ? `/nieuws/${article.slug}` : "/nieuws"}>
                 <div className="w-full aspect-[362/318] overflow-hidden">
                   <Image
                     src={article.image}
@@ -133,7 +133,7 @@ export default function News({ data }: { data?: NewsData } = {}) {
                 <p className="font-body font-medium text-[20px] leading-normal text-off-black mt-3 max-w-[241px]">
                   {article.title}
                 </p>
-              </div>
+              </a>
             ))}
           </div>
         </div>

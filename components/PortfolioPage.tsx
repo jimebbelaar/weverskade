@@ -37,7 +37,7 @@ const defaultProjects: PortfolioProject[] = [
     tagline: "In het hart van de stad",
     type: "Eigendom",
     location: "Rotterdam",
-    image: "/images/portfolio-card-1.jpg",
+    image: "/images/portfolio-card-1.webp",
   },
   {
     id: 2,
@@ -46,7 +46,7 @@ const defaultProjects: PortfolioProject[] = [
     tagline: "Wonen aan het water",
     type: "Eigendom",
     location: "Nieuwegein",
-    image: "/images/portfolio-card-2.jpg",
+    image: "/images/portfolio-card-2.webp",
   },
   {
     id: 3,
@@ -55,7 +55,7 @@ const defaultProjects: PortfolioProject[] = [
     tagline: "Historie in het Maaslands erfgoed",
     type: "Eigendom",
     location: "Maassluis",
-    image: "/images/portfolio-card-3.jpg",
+    image: "/images/portfolio-card-3.webp",
   },
   {
     id: 4,
@@ -64,7 +64,7 @@ const defaultProjects: PortfolioProject[] = [
     tagline: "Werken met uitzicht",
     type: "Eigendom",
     location: "Maassluis",
-    image: "/images/portfolio-1.png",
+    image: "/images/portfolio-1.webp",
   },
   {
     id: 5,
@@ -73,7 +73,7 @@ const defaultProjects: PortfolioProject[] = [
     tagline: "Aan de Scheveningse haven",
     type: "Eigendom",
     location: "Amsterdam",
-    image: "/images/portfolio-card-1.jpg",
+    image: "/images/portfolio-card-1.webp",
   },
   {
     id: 6,
@@ -82,7 +82,7 @@ const defaultProjects: PortfolioProject[] = [
     tagline: "Ontmoeten in Delft",
     type: "Eigendom",
     location: "Delft",
-    image: "/images/portfolio-card-2.jpg",
+    image: "/images/portfolio-card-2.webp",
   },
   // In ontwikkeling (3)
   {
@@ -92,7 +92,7 @@ const defaultProjects: PortfolioProject[] = [
     tagline: "Dichtbij alles",
     type: "In ontwikkeling",
     location: "Heereveen",
-    image: "/images/portfolio-card-3.jpg",
+    image: "/images/portfolio-card-3.webp",
   },
   {
     id: 8,
@@ -101,7 +101,7 @@ const defaultProjects: PortfolioProject[] = [
     tagline: "Wonen in het groen",
     type: "In ontwikkeling",
     location: "Heereveen",
-    image: "/images/portfolio-2.png",
+    image: "/images/portfolio-2.webp",
   },
   {
     id: 9,
@@ -110,7 +110,7 @@ const defaultProjects: PortfolioProject[] = [
     tagline: "Nieuwbouw aan de Maas",
     type: "In ontwikkeling",
     location: "Maassluis",
-    image: "/images/portfolio-card-1.jpg",
+    image: "/images/portfolio-card-1.webp",
   },
   // Facility Management (4)
   {
@@ -120,7 +120,7 @@ const defaultProjects: PortfolioProject[] = [
     tagline: "Leven in het centrum",
     type: "Facility Management",
     location: "Heereveen",
-    image: "/images/portfolio-3.png",
+    image: "/images/portfolio-3.webp",
   },
   {
     id: 11,
@@ -129,7 +129,7 @@ const defaultProjects: PortfolioProject[] = [
     tagline: "Vergezichten over Friesland",
     type: "Facility Management",
     location: "Heereveen",
-    image: "/images/portfolio-card-3.jpg",
+    image: "/images/portfolio-card-3.webp",
   },
   {
     id: 12,
@@ -138,7 +138,7 @@ const defaultProjects: PortfolioProject[] = [
     tagline: "Dutch heritage in Iowa",
     type: "Facility Management",
     location: "Pella (US)",
-    image: "/images/portfolio-card-2.jpg",
+    image: "/images/portfolio-card-2.webp",
   },
   {
     id: 13,
@@ -147,7 +147,7 @@ const defaultProjects: PortfolioProject[] = [
     tagline: "Hart van de stad",
     type: "Facility Management",
     location: "Nieuwegein",
-    image: "/images/portfolio-card-1.jpg",
+    image: "/images/portfolio-card-1.webp",
   },
 ];
 
@@ -155,7 +155,7 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
   const projects = data?.projects ?? defaultProjects;
   // Hero slideshow: hero image first, then all unique project images
   const heroSlides = data?.heroImages ?? [
-    "/images/portfolio-hero.jpg",
+    "/images/portfolio-hero.webp",
     ...defaultProjects
       .map((p) => p.image)
       .filter((img, i, arr) => arr.indexOf(img) === i),

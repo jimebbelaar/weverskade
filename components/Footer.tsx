@@ -9,12 +9,12 @@ const navCol1 = [
   { label: "Over ons", href: "/over-ons" },
   { label: "Portefeuille", href: "/portefeuille" },
   { label: "Nieuws", href: "/nieuws" },
+  { label: "Maatschappelijk", href: "/maatschappelijk" },
 ];
 
 const navCol2 = [
-  { label: "Wonen bij", href: "/wonen-bij" },
-  { label: "Maatschappelijk", href: "/maatschappelijk" },
   { label: "Werken bij", href: "/werken-bij" },
+  { label: "Wonen bij", href: "/wonen-bij" },
   { label: "Contact", href: "/contact" },
   { label: "LinkedIn", href: "https://www.linkedin.com/company/weverskade" },
 ];

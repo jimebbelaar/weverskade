@@ -21,7 +21,7 @@ export default async function Maatschappelijk() {
 
   const sociaalData = pageData
     ? {
-        heroImage: sanityImageUrl(pageData.heroImage, "/images/sociaal-hero.jpg"),
+        heroImage: sanityImageUrl(pageData.heroImage, "/images/sociaal-hero.webp"),
         statementHeading: pageData.statementHeading,
         approachLabel: pageData.approachLabel,
         approachItems: pageData.approachItems,

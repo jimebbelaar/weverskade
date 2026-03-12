@@ -23,7 +23,7 @@ export default async function Nieuws() {
             id: i + 1,
             date: formatSanityDate(a.date, "30 januari, 2026"),
             title: a.title,
-            image: sanityImageUrl(a.heroImage, "/images/news-placeholder.png"),
+            image: sanityImageUrl(a.heroImage, "/images/news-placeholder.webp"),
             slug: a.slug?.current ?? "",
           })),
         }

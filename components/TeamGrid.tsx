@@ -19,17 +19,17 @@ const bottomRowWidths = [
 
 const images = {
   top: [
-    "/images/about-team-1.jpg",
-    "/images/about-team-2.jpg",
-    "/images/about-team-3.jpg",
-    "/images/about-team-4.jpg",
-    "/images/about-team-5.jpg",
+    "/images/about-team-1.webp",
+    "/images/about-team-2.webp",
+    "/images/about-team-3.webp",
+    "/images/about-team-4.webp",
+    "/images/about-team-5.webp",
   ],
   bottom: [
-    "/images/about-team-6.jpg",
-    "/images/about-team-7.jpg",
-    "/images/about-team-8.jpg",
-    "/images/about-team-9.jpg",
+    "/images/about-team-6.webp",
+    "/images/about-team-7.webp",
+    "/images/about-team-8.webp",
+    "/images/about-team-9.webp",
   ],
 };
 

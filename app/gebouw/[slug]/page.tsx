@@ -69,10 +69,10 @@ export default async function GebouwRoute({ params }: PageProps) {
       partners: sanityProject.partners ?? localProject?.partners,
       year: sanityProject.year ?? localProject?.year,
       wonenBeschikbaar: sanityProject.wonenBeschikbaar ?? localProject?.wonenBeschikbaar ?? false,
-      heroImage: sanityImageUrl(sanityProject.heroImage, localProject?.heroImage ?? "/images/portfolio-hero.jpg"),
-      fullWidthImage: sanityImageUrl(sanityProject.fullWidthImage, localProject?.fullWidthImage ?? "/images/portfolio-hero.jpg"),
+      heroImage: sanityImageUrl(sanityProject.heroImage, localProject?.heroImage ?? "/images/portfolio-hero.webp"),
+      fullWidthImage: sanityImageUrl(sanityProject.fullWidthImage, localProject?.fullWidthImage ?? "/images/portfolio-hero.webp"),
       smallImages: sanityProject.smallImages?.length > 0
-        ? sanityProject.smallImages.map((img: any) => sanityImageUrl(img, "/images/portfolio-1.png"))
+        ? sanityProject.smallImages.map((img: any) => sanityImageUrl(img, "/images/portfolio-1.webp"))
         : localProject?.smallImages ?? [],
       descriptionLeft: sanityProject.descriptionLeft ?? localProject?.descriptionLeft ?? "",
       descriptionRight: sanityProject.descriptionRight ?? localProject?.descriptionRight ?? "",

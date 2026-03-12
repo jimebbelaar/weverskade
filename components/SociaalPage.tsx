@@ -118,15 +118,15 @@ export default function SociaalPage({ data }: { data?: SociaalPageData } = {}) {
           <div
             className="absolute inset-0 z-0 will-change-transform"
             style={{
-              transform: animate ? "scale(1)" : "scale(1.15)",
+              transform: animate ? "scale(1)" : "scale(1.3)",
               transition: animate
-                ? "transform 1.8s cubic-bezier(0.16, 1, 0.3, 1)"
+                ? "transform 3s cubic-bezier(0.16, 1, 0.3, 1)"
                 : "none",
             }}
           >
             <Image
               ref={bgRef}
-              src={data?.heroImage ?? "/images/sociaal-hero.jpg"}
+              src={data?.heroImage ?? "/images/sociaal-hero.webp"}
               alt="Luchtfoto molen en landschap"
               fill
               sizes="100vw"
@@ -162,7 +162,7 @@ export default function SociaalPage({ data }: { data?: SociaalPageData } = {}) {
                 <div
                   key={item.number}
                   className={`flex items-start gap-[8.333vw] max-md:flex-col max-md:gap-3 ${
-                    i > 0 ? "mt-[10.208vw] max-md:mt-10" : ""
+                    i > 0 ? "mt-[5.903vw] max-md:mt-10" : ""
                   }`}
                 >
                   <p className="font-body font-medium text-[1.597vw] leading-[2.153vw] tracking-[-0.032vw] text-off-white shrink-0 w-[6.042vw] max-md:text-[20px] max-md:leading-normal max-md:w-auto">
@@ -244,7 +244,7 @@ export default function SociaalPage({ data }: { data?: SociaalPageData } = {}) {
             <div className="w-[27.5vw] shrink-0 max-md:w-full">
               <div className="mt-[14.444vw] w-full h-[27.083vw] overflow-hidden max-md:mt-6 max-md:h-[65vw]">
                 <Image
-                  src="/images/sociaal-mensen.jpg"
+                  src="/images/sociaal-mensen.webp"
                   alt="Mensen bij Weverskade"
                   width={1200}
                   height={900}
@@ -269,7 +269,7 @@ export default function SociaalPage({ data }: { data?: SociaalPageData } = {}) {
               </p>
               <div className="w-[38.819vw] h-[25.833vw] overflow-hidden mt-[6.944vw] max-md:w-full max-md:h-[65vw] max-md:mt-6">
                 <Image
-                  src="/images/sociaal-co2.jpg"
+                  src="/images/sociaal-co2.webp"
                   alt="Duurzaam gebouw"
                   width={1200}
                   height={900}
@@ -304,7 +304,7 @@ export default function SociaalPage({ data }: { data?: SociaalPageData } = {}) {
             {/* Large image left */}
             <div className="w-[38.819vw] h-[41.944vw] overflow-hidden shrink-0 max-md:w-full max-md:h-[85vw]">
               <Image
-                src="/images/sociaal-verduurzamen.jpg"
+                src="/images/sociaal-verduurzamen.webp"
                 alt="Verduurzaming gebouwen"
                 width={1200}
                 height={900}

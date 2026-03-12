@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
+import { useState, useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Menu from "@/components/Menu";
 import { usePageNavigation } from "@/hooks/usePageNavigation";
 
@@ -29,15 +29,52 @@ function detectTheme(): NavTheme {
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const navigate = usePageNavigation();
+  const pendingLogoHref = useRef<string | null>(null);
+
+  // When menu closes after a logo click, navigate after a short delay
+  // so the menu close animation plays first.
+  useEffect(() => {
+    if (!menuOpen && pendingLogoHref.current) {
+      const href = pendingLogoHref.current;
+      pendingLogoHref.current = null;
+
+      // Capture old page DOM before navigating
+      const container = document.querySelector("[data-page-content]");
+      if (container) {
+        window.__pageSnapshot = {
+          html: container.innerHTML,
+          scrollY: window.scrollY,
+        };
+      }
+
+      window.dispatchEvent(new CustomEvent("nav-hide"));
+
+      const t = setTimeout(() => {
+        router.push(href);
+      }, 250);
+      return () => clearTimeout(t);
+    }
+  }, [menuOpen, router]);
 
   const [navVisible, setNavVisible] = useState(true);
   const [theme, setTheme] = useState<NavTheme>("dark");
   const [skipBgTransition, setSkipBgTransition] = useState(false);
   const lastScrollY = useRef(0);
   const transitioning = useRef(false);
+
+  // On initial load, if a Hero flagged that the nav should start hidden,
+  // hide it before first paint and schedule the entrance animation.
+  useLayoutEffect(() => {
+    if (window.__navInitialHidden) {
+      window.__navInitialHidden = false;
+      setNavVisible(false);
+      transitioning.current = true;
+    }
+  }, []);
 
   // Page transition events
   useEffect(() => {
@@ -142,7 +179,19 @@ export default function Navbar() {
       <div className="relative flex justify-between items-center pt-[1.979vw] pr-[1.944vw] pb-[1.979vw] pl-[2.431vw] max-md:pt-2.5 max-md:pr-4 max-md:pb-2.5 max-md:pl-4">
         <a
           href="/"
-          onClick={(e) => navigate(e, "/")}
+          onClick={(e) => {
+            if (menuOpen) {
+              e.preventDefault();
+              if (pathname === "/") {
+                closeMenu();
+              } else {
+                pendingLogoHref.current = "/";
+                closeMenu();
+              }
+            } else {
+              navigate(e, "/");
+            }
+          }}
           className="block w-[23.611vw] h-[3.056vw] shrink-0 max-md:w-[55vw] max-md:h-auto"
           aria-label="Weverskade home"
         >

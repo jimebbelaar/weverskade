@@ -2,12 +2,12 @@ import { urlFor } from './image'
 
 export function sanityImageUrl(image: any, fallback: string): string {
   if (!image?.asset) return fallback
-  return urlFor(image).url()
+  return urlFor(image).format('webp').quality(90).url()
 }
 
 export function sanityImageUrlSized(image: any, fallback: string, width: number): string {
   if (!image?.asset) return fallback
-  return urlFor(image).width(width).url()
+  return urlFor(image).width(width).format('webp').quality(90).url()
 }
 
 export function formatSanityDate(dateStr: string | undefined, fallback: string): string {

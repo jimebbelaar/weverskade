@@ -66,7 +66,7 @@ export default function HeroOverOns({ title, image }: HeroOverOnsProps = {}) {
           }}
         >
           <Image
-            src={image ?? "/images/about-ds1.jpg"}
+            src={image ?? "/images/about-ds1.webp"}
             alt="Weverskade kantoor"
             width={1373}
             height={800}

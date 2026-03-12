@@ -365,7 +365,7 @@ export default function GebouwPage({ project }: GebouwPageProps) {
               ))}
             </div>
             {/* Partners / year column — aligned at bottom */}
-            <div className="font-body font-medium text-[1.597vw] leading-[2.153vw] tracking-[-0.032vw] text-off-black max-md:text-[17px] max-md:leading-[24px] self-end max-md:self-start">
+            <div className="font-body font-medium text-[1.597vw] leading-[2.153vw] tracking-[-0.032vw] text-off-black max-md:text-[17px] max-md:leading-[24px] flex flex-col justify-end max-md:justify-start">
               {partnerLines.map((line, i) => (
                 <DetailLine
                   key={i}

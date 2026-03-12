@@ -53,7 +53,7 @@ export default function AerialParallax() {
     >
       <Image
         ref={imgRef}
-        src="/images/about-aerial.png"
+        src="/images/about-aerial.webp"
         alt="Luchtfoto vastgoed"
         width={2400}
         height={1800}

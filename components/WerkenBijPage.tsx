@@ -51,7 +51,7 @@ export default function WerkenBijPage({ data }: { data?: WerkenBijPageData } = {
   return (
     <section className="bg-off-white min-h-screen">
       {/* Hero title */}
-      <div className="pt-[13.194vw] px-[2.431vw] pb-[6.944vw] max-md:pt-[28vw] max-md:px-5 max-md:pb-10">
+      <div className="pt-[13.194vw] pl-[18.542vw] pr-[2.431vw] pb-[6.944vw] max-md:pt-[28vw] max-md:px-5 max-md:pb-10">
         <div className="overflow-hidden">
           <h1
             className="font-heading font-normal text-[5.556vw] leading-normal tracking-[-0.111vw] text-off-black max-md:text-[40px] max-md:tracking-[-0.8px] will-change-transform"
@@ -62,16 +62,16 @@ export default function WerkenBijPage({ data }: { data?: WerkenBijPageData } = {
                 : "none",
             }}
           >
-            {data?.heroTitle ?? "Werken bij Weverkade"}
+            {data?.heroTitle ?? "Werken bij Weverskade"}
           </h1>
         </div>
       </div>
 
       {/* Vacatures table */}
-      <div className="px-[2.431vw] max-md:px-5">
+      <div className="pl-[19.028vw] pr-[14.514vw] max-md:px-5">
         {/* Column headers */}
         <div className="flex max-md:hidden">
-          <div className="w-[33.333%] pl-[14.236vw]">
+          <div className="w-[48%]">
             <p
               className="font-body font-medium text-[1.389vw] leading-normal text-off-black will-change-transform"
               style={{
@@ -85,7 +85,7 @@ export default function WerkenBijPage({ data }: { data?: WerkenBijPageData } = {
               Vacature titel
             </p>
           </div>
-          <div className="flex-1 pl-[2.778vw]">
+          <div className="flex-1">
             <p
               className="font-body font-medium text-[1.389vw] leading-normal text-off-black will-change-transform"
               style={{
@@ -105,21 +105,24 @@ export default function WerkenBijPage({ data }: { data?: WerkenBijPageData } = {
         <div className="mt-[2.083vw] max-md:mt-4">
           {vacatures.map((vacature, index) => {
             const delay = rowBaseDelay + index * rowStagger;
+            const isLast = index === vacatures.length - 1;
 
             return (
-              <div
-                key={vacature.slug}
-                className="border-t border-off-black/20 last:border-b"
-                style={{
-                  opacity: animate ? 1 : 0,
-                  transition: animate
-                    ? `opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`
-                    : "none",
-                }}
-              >
+              <div key={vacature.slug} className="relative">
+                {/* Animated top line */}
+                <div
+                  className="h-px bg-off-black/20 origin-left will-change-transform"
+                  style={{
+                    transform: animate ? "scaleX(1)" : "scaleX(0)",
+                    transition: animate
+                      ? `transform 1.4s cubic-bezier(0.08, 0.82, 0.17, 1) ${delay}s`
+                      : "none",
+                  }}
+                />
+
                 <div className="flex py-[2.778vw] max-md:flex-col max-md:py-6">
                   {/* Vacature title */}
-                  <div className="w-[33.333%] pl-[14.236vw] max-md:w-full max-md:pl-0 max-md:mb-4">
+                  <div className="w-[48%] max-md:w-full max-md:mb-4">
                     <div className="overflow-hidden">
                       <p
                         className="font-heading font-normal text-[1.389vw] leading-normal text-off-black max-md:text-[20px] will-change-transform"
@@ -128,7 +131,7 @@ export default function WerkenBijPage({ data }: { data?: WerkenBijPageData } = {
                             ? "translateY(0)"
                             : "translateY(110%)",
                           transition: animate
-                            ? `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${delay + 0.04}s`
+                            ? `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${delay + 0.08}s`
                             : "none",
                         }}
                       >
@@ -138,10 +141,10 @@ export default function WerkenBijPage({ data }: { data?: WerkenBijPageData } = {
                   </div>
 
                   {/* Description + link */}
-                  <div className="flex-1 pl-[2.778vw] max-md:pl-0">
+                  <div className="flex-1">
                     <LineSplit
                       animate={animate}
-                      delay={delay + 0.08}
+                      delay={delay + 0.12}
                       stagger={0.06}
                       className="font-body font-medium text-[1.25vw] leading-[1.528vw] text-off-black max-w-[31.389vw] max-md:text-[16px] max-md:leading-[22px] max-md:max-w-none"
                     >
@@ -158,7 +161,7 @@ export default function WerkenBijPage({ data }: { data?: WerkenBijPageData } = {
                         style={{
                           opacity: animate ? 1 : 0,
                           transition: animate
-                            ? `opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${delay + 0.18}s`
+                            ? `opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${delay + 0.22}s`
                             : "none",
                         }}
                       >
@@ -167,6 +170,19 @@ export default function WerkenBijPage({ data }: { data?: WerkenBijPageData } = {
                     </div>
                   </div>
                 </div>
+
+                {/* Animated bottom line (last row only) */}
+                {isLast && (
+                  <div
+                    className="h-px bg-off-black/20 origin-left will-change-transform"
+                    style={{
+                      transform: animate ? "scaleX(1)" : "scaleX(0)",
+                      transition: animate
+                        ? `transform 1.4s cubic-bezier(0.08, 0.82, 0.17, 1) ${delay + 0.15}s`
+                        : "none",
+                    }}
+                  />
+                )}
               </div>
             );
           })}

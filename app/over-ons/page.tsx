@@ -27,10 +27,10 @@ export default async function OverOns() {
   ]);
 
   const heroTitle = pageData?.heroTitle ?? "Over ons";
-  const heroImage = sanityImageUrl(pageData?.heroImage, "/images/about-ds1.jpg");
+  const heroImage = sanityImageUrl(pageData?.heroImage, "/images/about-ds1.webp");
   const storyHeading = pageData?.storyHeading ?? "Weverskade ontwikkelt en beheert vastgoed met aandacht voor ruimte. We kijken verder dan de vraag van het moment en investeren in plekken die blijven werken, vandaag en op lange termijn.";
   const storyText = pageData?.storyText;
-  const storyImage = sanityImageUrl(pageData?.storyImage, "/images/about-story.jpg");
+  const storyImage = sanityImageUrl(pageData?.storyImage, "/images/about-story.webp");
   const mvLabel = pageData?.mvLabel ?? "Missie & Visie";
   const mvHeading = pageData?.mvHeading ?? "Bij Weverskade geloven we in het goed doen. Ook als niemand daarom vraagt.";
   const missionText = pageData?.missionText ?? "Met vastgoed willen we bijdragen aan een omgeving die goed is voor mens en natuur. We creëren plekken waar wonen en werken vanzelf goed voelt en waar kwaliteit en gezondheid vanzelfsprekend zijn. Vanuit die verantwoordelijkheid investeren we ook in maatschappelijke en duurzame initiatieven.";
@@ -52,14 +52,14 @@ export default async function OverOns() {
   const teamMembers = teamData?.map((t: any) => ({
     name: t.name,
     function: t.function,
-    image: sanityImageUrl(t.image, "/images/team-placeholder.jpg"),
+    image: sanityImageUrl(t.image, "/images/team-placeholder.webp"),
   }));
 
   const impactData = pageData
     ? {
         label: pageData.impactHeading ? undefined : undefined,
         images: pageData.impactImages?.map((img: any, i: number) => ({
-          src: sanityImageUrl(img, ["/images/about-nature.jpg", "/images/about-aerial.jpg", "/images/about-story.jpg"][i]),
+          src: sanityImageUrl(img, ["/images/about-nature.webp", "/images/about-aerial.webp", "/images/about-story.webp"][i]),
           index: i,
         })),
       }
@@ -171,7 +171,7 @@ export default async function OverOns() {
                 </p>
                 <div className="w-full h-[24.583vw] overflow-hidden mb-[1.111vw] max-md:h-[55vw] max-md:mb-3">
                   <Image
-                    src={item.image ? sanityImageUrl(item.image, ["/images/about-beleggen.jpg", "/images/about-ontwikkelen.jpg", "/images/about-ds1.jpg"][i]) : ["/images/about-beleggen.jpg", "/images/about-ontwikkelen.jpg", "/images/about-ds1.jpg"][i]}
+                    src={item.image ? sanityImageUrl(item.image, ["/images/about-beleggen.webp", "/images/about-ontwikkelen.webp", "/images/about-ds1.webp"][i]) : ["/images/about-beleggen.webp", "/images/about-ontwikkelen.webp", "/images/about-ds1.webp"][i]}
                     alt={item.title}
                     width={800}
                     height={600}
@@ -226,9 +226,9 @@ export default async function OverOns() {
         <Impact
           data={impactData ?? {
             images: [
-              { src: "/images/about-nature.jpg", index: 0 },
-              { src: "/images/about-aerial.jpg", index: 1 },
-              { src: "/images/about-story.jpg", index: 2 },
+              { src: "/images/about-nature.webp", index: 0 },
+              { src: "/images/about-aerial.webp", index: 1 },
+              { src: "/images/about-story.webp", index: 2 },
             ],
           }}
         />

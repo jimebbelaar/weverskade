@@ -27,7 +27,7 @@ export default async function Portefeuille() {
           heroLabel: pageData?.heroLabel,
           heroTitle: pageData?.heroTitle,
           heroImages: pageData?.heroImages?.map((img: any) =>
-            sanityImageUrl(img, "/images/portfolio-hero.jpg")
+            sanityImageUrl(img, "/images/portfolio-hero.webp")
           ),
           ctaLabel: pageData?.ctaLabel,
           ctaHeading: pageData?.ctaHeading,
@@ -40,7 +40,7 @@ export default async function Portefeuille() {
             tagline: p.tagline ?? "",
             type: p.category ?? p.type ?? "",
             location: p.location ?? "",
-            image: sanityImageUrl(p.portfolioImage, "/images/portfolio-card-1.jpg"),
+            image: sanityImageUrl(p.portfolioImage, "/images/portfolio-card-1.webp"),
           })),
         }
       : undefined;

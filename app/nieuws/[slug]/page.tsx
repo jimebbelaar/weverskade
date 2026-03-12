@@ -54,7 +54,7 @@ export default async function NieuwsDetail({ params }: PageProps) {
         title: article.title,
         date: formatSanityDate(article.date, "30 januari, 2026"),
         category: article.category,
-        heroImage: sanityImageUrl(article.heroImage, "/images/news-placeholder.png"),
+        heroImage: sanityImageUrl(article.heroImage, "/images/news-placeholder.webp"),
         body: article.body,
       }
     : undefined;

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useParallax } from "@/hooks/useParallax";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 interface HeroData {
   title?: string;
@@ -14,9 +14,17 @@ export default function Hero({ data }: { data?: HeroData } = {}) {
   const { bgRef, heroRef } = useParallax();
   const [animate, setAnimate] = useState(false);
 
+  // On direct load, set a flag so the Navbar knows to start hidden
+  useLayoutEffect(() => {
+    if (!window.__pageTransitioning) {
+      window.__navInitialHidden = true;
+    }
+  }, []);
+
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setAnimate(true);
+      window.dispatchEvent(new Event("page-transition-end"));
       return;
     }
 
@@ -25,15 +33,17 @@ export default function Hero({ data }: { data?: HeroData } = {}) {
       return () => clearTimeout(timer);
     }
 
-    // Direct load — animate after paint
-    let rafOuter = 0;
-    let rafInner = 0;
-    rafOuter = requestAnimationFrame(() => {
-      rafInner = requestAnimationFrame(() => setAnimate(true));
-    });
+    // Direct load — animate nav in first, then hero content
+    const navTimer = setTimeout(() => {
+      window.dispatchEvent(new Event("page-transition-end"));
+    }, 150);
+    const wordTimer = setTimeout(() => {
+      setAnimate(true);
+    }, 350);
+
     return () => {
-      cancelAnimationFrame(rafOuter);
-      cancelAnimationFrame(rafInner);
+      clearTimeout(navTimer);
+      clearTimeout(wordTimer);
     };
   }, []);
 
@@ -46,15 +56,15 @@ export default function Hero({ data }: { data?: HeroData } = {}) {
       <div
         className="absolute inset-0 z-0 will-change-transform"
         style={{
-          transform: animate ? "scale(1)" : "scale(1.15)",
+          transform: animate ? "scale(1)" : "scale(1.3)",
           transition: animate
-            ? "transform 1.8s cubic-bezier(0.16, 1, 0.3, 1)"
+            ? "transform 3s cubic-bezier(0.16, 1, 0.3, 1)"
             : "none",
         }}
       >
         <Image
           ref={bgRef}
-          src={data?.backgroundImage ?? "/images/hero-bg.png"}
+          src={data?.backgroundImage ?? "/images/hero-bg.webp"}
           alt="Weverskade gebouw"
           fill
           sizes="100vw"
@@ -65,21 +75,25 @@ export default function Hero({ data }: { data?: HeroData } = {}) {
         <div className="absolute inset-0 bg-off-black opacity-30" />
       </div>
 
-      {/* Hero Title — line reveal */}
+      {/* Hero Title — staggered word reveal */}
       <div className="absolute z-2 inset-0 flex items-center pointer-events-none">
-        <div className="w-full px-[2.431vw] max-md:px-5 overflow-hidden">
+        <div className="w-full px-[2.431vw] max-md:px-5">
           <h1
-            className="w-full flex justify-between items-baseline font-heading font-normal text-[2.847vw] leading-[3.194vw] text-off-white tracking-[0.01em] max-md:text-[21px] max-md:leading-[46px] will-change-transform"
-            style={{
-              transform: animate ? "translateY(0)" : "translateY(110%)",
-              transition: animate
-                ? "transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s"
-                : "none",
-            }}
+            className="w-full flex justify-between items-baseline font-heading font-normal text-[2.847vw] leading-[3.194vw] text-off-white tracking-[0.01em] max-md:text-[21px] max-md:leading-[46px]"
           >
             {(data?.title ?? "Aandacht voor ruimte").split(" ").map((word, i, arr) => (
-              <span key={i} className={i === Math.floor(arr.length / 2) ? "text-center" : i === arr.length - 1 ? "text-right" : ""}>
-                {word}
+              <span key={i} className={`overflow-hidden inline-block ${i === Math.floor(arr.length / 2) ? "text-center" : i === arr.length - 1 ? "text-right" : ""}`}>
+                <span
+                  className="inline-block will-change-transform"
+                  style={{
+                    transform: animate ? "translateY(0)" : "translateY(110%)",
+                    transition: animate
+                      ? `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${0.15 + i * 0.12}s`
+                      : "none",
+                  }}
+                >
+                  {word}
+                </span>
               </span>
             ))}
           </h1>

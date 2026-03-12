@@ -10,6 +10,7 @@ declare global {
   interface Window {
     __pageSnapshot?: { html: string; scrollY: number };
     __pageTransitioning?: boolean;
+    __navInitialHidden?: boolean;
   }
 }
 

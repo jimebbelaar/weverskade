@@ -37,9 +37,9 @@ export const gebouwen: GebouwProject[] = [
     partners: "Naam partners",
     year: "2025",
     wonenBeschikbaar: false,
-    heroImage: "/images/portfolio-card-1.jpg",
-    fullWidthImage: "/images/portfolio-card-2.jpg",
-    smallImages: ["/images/portfolio-card-3.jpg", "/images/portfolio-1.png"],
+    heroImage: "/images/portfolio-card-1.webp",
+    fullWidthImage: "/images/portfolio-card-2.webp",
+    smallImages: ["/images/portfolio-card-3.webp", "/images/portfolio-1.webp"],
     descriptionLeft:
       "Thuiskomen krijgt een heel nieuwe dimensie in The New Citizen: Een appartementengebouw met huurwoningen in de vrije sector, dat letterlijk boven anderen uitstijgt. De 128 comfortabele appartementen onderscheiden zich door de eigentijdse interieurontwerpen. Het slim bedachte, down to earth design, herken je ook in de openbare ruimtes. Zo begint thuiskomen al bij de entree.",
     descriptionRight:
@@ -47,7 +47,7 @@ export const gebouwen: GebouwProject[] = [
     quote:
       "\u201CBij The New Citizen ging het ons niet alleen om het gebouw, maar om de plek in de stad. Hoe het aansluit op de omgeving en hoe bewoners het dagelijks gebruiken. Dat is waar we het voor doen.\u201D",
     quoteAuthor: "Vivianne Quak",
-    quoteAuthorImage: "/images/about-team-1.jpg",
+    quoteAuthorImage: "/images/about-team-1.webp",
     mapCoordinates: { lat: 52.0286, lng: 5.0868 },
   },
   {
@@ -62,9 +62,9 @@ export const gebouwen: GebouwProject[] = [
     year: "2025",
     wonenBeschikbaar: true,
     wonenSize: "60 - 80 m2",
-    heroImage: "/images/portfolio-card-2.jpg",
-    fullWidthImage: "/images/portfolio-card-3.jpg",
-    smallImages: ["/images/portfolio-card-1.jpg", "/images/portfolio-1.png"],
+    heroImage: "/images/portfolio-card-2.webp",
+    fullWidthImage: "/images/portfolio-card-3.webp",
+    smallImages: ["/images/portfolio-card-1.webp", "/images/portfolio-1.webp"],
     descriptionLeft:
       "Thuiskomen krijgt een heel nieuwe dimensie in The New Citizen: Een appartementengebouw met huurwoningen in de vrije sector, dat letterlijk boven anderen uitstijgt. De 128 comfortabele appartementen onderscheiden zich door de eigentijdse interieurontwerpen. Het slim bedachte, down to earth design, herken je ook in de openbare ruimtes. Zo begint thuiskomen al bij de entree.",
     descriptionRight:
@@ -84,9 +84,9 @@ export const gebouwen: GebouwProject[] = [
     partners: "Van der Linden & Co",
     year: "2026",
     wonenBeschikbaar: false,
-    heroImage: "/images/portfolio-card-3.jpg",
-    fullWidthImage: "/images/portfolio-card-1.jpg",
-    smallImages: ["/images/portfolio-card-2.jpg", "/images/portfolio-2.png"],
+    heroImage: "/images/portfolio-card-3.webp",
+    fullWidthImage: "/images/portfolio-card-1.webp",
+    smallImages: ["/images/portfolio-card-2.webp", "/images/portfolio-2.webp"],
     descriptionLeft:
       "Thuiskomen krijgt een heel nieuwe dimensie in The New Citizen: Een appartementengebouw met huurwoningen in de vrije sector, dat letterlijk boven anderen uitstijgt. De 128 comfortabele appartementen onderscheiden zich door de eigentijdse interieurontwerpen. Het slim bedachte, down to earth design, herken je ook in de openbare ruimtes. Zo begint thuiskomen al bij de entree.",
     descriptionRight:
@@ -94,7 +94,7 @@ export const gebouwen: GebouwProject[] = [
     quote:
       "\u201CDe Drie Lelies is een ode aan het rijke erfgoed van Maassluis. Elk detail in het ontwerp vertelt een verhaal.\u201D",
     quoteAuthor: "Jan de Vries",
-    quoteAuthorImage: "/images/about-team-2.jpg",
+    quoteAuthorImage: "/images/about-team-2.webp",
     mapCoordinates: { lat: 51.9225, lng: 4.2506 },
   },
 ];

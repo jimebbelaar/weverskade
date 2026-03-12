@@ -33,7 +33,7 @@ const defaultProjects: WonenProject[] = [
     tagline: "In het hart van de stad",
     type: "Beschikbaar",
     location: "Rotterdam",
-    image: "/images/portfolio-card-1.jpg",
+    image: "/images/portfolio-card-1.webp",
   },
   {
     id: 2,
@@ -42,7 +42,7 @@ const defaultProjects: WonenProject[] = [
     tagline: "Dichtbij alles",
     type: "Beschikbaar",
     location: "Heereveen",
-    image: "/images/portfolio-card-2.jpg",
+    image: "/images/portfolio-card-2.webp",
   },
   {
     id: 3,
@@ -51,7 +51,7 @@ const defaultProjects: WonenProject[] = [
     tagline: "Historie in het Maaslands erfgoed",
     type: "Beschikbaar",
     location: "Maassluis",
-    image: "/images/portfolio-card-3.jpg",
+    image: "/images/portfolio-card-3.webp",
   },
   {
     id: 4,
@@ -60,7 +60,7 @@ const defaultProjects: WonenProject[] = [
     tagline: "Wonen aan het water",
     type: "In ontwikkeling",
     location: "Nieuwegein",
-    image: "/images/portfolio-card-1.jpg",
+    image: "/images/portfolio-card-1.webp",
   },
   {
     id: 5,
@@ -69,7 +69,7 @@ const defaultProjects: WonenProject[] = [
     tagline: "Wonen in het groen",
     type: "In ontwikkeling",
     location: "Heereveen",
-    image: "/images/portfolio-card-2.jpg",
+    image: "/images/portfolio-card-2.webp",
   },
   {
     id: 6,
@@ -78,7 +78,7 @@ const defaultProjects: WonenProject[] = [
     tagline: "Nieuwbouw aan de Maas",
     type: "In ontwikkeling",
     location: "Maassluis",
-    image: "/images/portfolio-card-3.jpg",
+    image: "/images/portfolio-card-3.webp",
   },
 ];
 

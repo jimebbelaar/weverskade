@@ -23,7 +23,7 @@ export default async function Home() {
     ? {
         title: homeData.heroTitle,
         subtitle: homeData.heroSubtitle,
-        backgroundImage: sanityImageUrl(homeData.heroImage, "/images/hero-bg.png"),
+        backgroundImage: sanityImageUrl(homeData.heroImage, "/images/hero-bg.webp"),
       }
     : undefined;
 
@@ -33,7 +33,7 @@ export default async function Home() {
         text: homeData.introText,
         linkText: homeData.introLinkText,
         linkUrl: homeData.introLinkUrl,
-        image: sanityImageUrl(homeData.introImage, "/images/small-plant.jpg"),
+        image: sanityImageUrl(homeData.introImage, "/images/small-plant.webp"),
       }
     : undefined;
 
@@ -45,9 +45,10 @@ export default async function Home() {
           linkText: homeData.portfolioLinkText,
           linkUrl: homeData.portfolioLinkUrl,
           projects: homeData.featuredProjects.map((p: any) => ({
-            image: sanityImageUrl(p.portfolioImage, "/images/portfolio-1.png"),
+            image: sanityImageUrl(p.portfolioImage, "/images/portfolio-1.webp"),
             title: p.name,
             subtitle: p.tagline,
+            slug: p.slug?.current ?? p.slug ?? "",
           })),
         }
       : undefined;
@@ -61,7 +62,7 @@ export default async function Home() {
         linkText: homeData.impactLinkText,
         linkUrl: homeData.impactLinkUrl,
         images: homeData.impactImages?.map((img: any, i: number) => ({
-          src: sanityImageUrl(img, ["/images/portfolio-3.png", "/images/portfolio-2.png", "/images/nature.jpg"][i] || "/images/portfolio-1.png"),
+          src: sanityImageUrl(img, ["/images/portfolio-3.webp", "/images/portfolio-2.webp", "/images/nature.webp"][i] || "/images/portfolio-1.webp"),
           index: i,
         })),
       }
@@ -75,7 +76,7 @@ export default async function Home() {
           articles: newsData.slice(0, 3).map((a: any) => ({
             date: a.date,
             title: a.title,
-            image: sanityImageUrl(a.heroImage, "/images/news-placeholder.png"),
+            image: sanityImageUrl(a.heroImage, "/images/news-placeholder.webp"),
             slug: a.slug?.current,
           })),
         }

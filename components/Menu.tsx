@@ -28,9 +28,15 @@ export default function Menu({ isOpen, onClose }: MenuProps) {
   useEffect(() => {
     if (isOpen) {
       setMounted(true);
+      let cancelled = false;
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => setVisible(true));
+        if (cancelled) return;
+        requestAnimationFrame(() => {
+          if (cancelled) return;
+          setVisible(true);
+        });
       });
+      return () => { cancelled = true; };
     } else {
       setVisible(false);
       const t = setTimeout(() => setMounted(false), 900);

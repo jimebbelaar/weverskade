@@ -15,7 +15,7 @@ const defaultArticle: NewsArticle = {
   title: "Weverskade geselecteerd als ontwikkelaar van De Kuip.",
   date: "30 januari, 2026",
   category: "Nieuws",
-  image: "/images/news-placeholder.png",
+  image: "/images/news-placeholder.webp",
   body: [
     "Weverskade is geselecteerd als ontwikkelaar voor de herontwikkeling van stadion De Kuip en de directe omgeving. Na een langlopend tendertraject is gekozen voor een plan waarin behoud, vernieuwing en de toekomst van het gebied zorgvuldig samenkomen.",
     "De herontwikkeling richt zich op het versterken van de plek in de stad, met ruimte voor wonen, werken en voorzieningen, terwijl het karakter van het stadion en zijn omgeving behouden blijft. In samenwerking met betrokken partijen wordt de komende periode gewerkt aan een plan dat aansluit bij de geschiedenis van De Kuip en de toekomst van Rotterdam-Zuid.",

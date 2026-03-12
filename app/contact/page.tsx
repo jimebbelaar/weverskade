@@ -19,7 +19,7 @@ export default async function Contact() {
   const contactData = pageData
     ? {
         heroTitle: pageData.heroTitle,
-        heroImage: sanityImageUrl(pageData.heroImage, "/images/contact-team.jpg"),
+        heroImage: sanityImageUrl(pageData.heroImage, "/images/contact-team.webp"),
         contactItems: pageData.contactItems,
       }
     : undefined;
