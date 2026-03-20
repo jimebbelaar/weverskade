@@ -24,6 +24,8 @@ export default function Menu({ isOpen, onClose }: MenuProps) {
   const [visible, setVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pendingHref = useRef<string | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isNavHovered, setIsNavHovered] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -138,48 +140,74 @@ export default function Menu({ isOpen, onClose }: MenuProps) {
         }}
       >
         {/* Nav links with staggered dividers */}
-        <nav className="px-[2.222vw] pt-[9.722vw] max-md:px-5 max-md:pt-20">
-          {menuItems.map((item, i) => (
-            <div key={item.label}>
+        <nav
+          className="px-[2.222vw] pt-[9.722vw] max-md:px-5 max-md:pt-20"
+          onMouseEnter={() => setIsNavHovered(true)}
+          onMouseLeave={() => { setIsNavHovered(false); setHoveredIndex(null); }}
+        >
+          {menuItems.map((item, i) => {
+            const isActive = item.href === pathname;
+            const isHovered = hoveredIndex === i;
+            const isDimmed = isNavHovered && hoveredIndex !== null && !isHovered && !isActive;
+            // The line BELOW this item = divider of next item (i+1), or the final divider
+            const lineBelow = hoveredIndex !== null && hoveredIndex === i - 1;
+            return (
+            <div
+              key={item.label}
+              onMouseEnter={() => !isActive && setHoveredIndex(i)}
+            >
               {/* Divider line — expands from left */}
               <div
-                className="h-px bg-off-white/30"
+                className="h-px"
                 style={{
                   transformOrigin: "left",
                   transform: visible ? "scaleX(1)" : "scaleX(0)",
+                  background: lineBelow
+                    ? "rgba(255,255,255,0.8)"
+                    : "rgba(255,255,255,0.3)",
                   transition: visible
-                    ? `transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${0.4 + i * 0.06}s`
-                    : `transform 0.3s cubic-bezier(0.4, 0, 0, 1) ${(n - i) * 0.02}s`,
+                    ? `transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${0.4 + i * 0.06}s, background 0.5s ease`
+                    : `transform 0.3s cubic-bezier(0.4, 0, 0, 1) ${(n - i) * 0.02}s, background 0.5s ease`,
                 }}
               />
-              {/* Link — fades up */}
+              {/* Link */}
               <a
                 href={item.href}
                 onClick={(e) => handleNavigation(e, item.href)}
-                className={`block font-body font-medium text-[2.917vw] leading-[4.306vw] tracking-[-0.04em] text-off-white no-underline transition-opacity duration-200 max-md:text-[32px] max-md:leading-[48px] ${item.href === pathname ? "opacity-40 pointer-events-none" : "hover:opacity-70"}`}
+                className={`block font-body font-medium text-[2.917vw] leading-[4.306vw] tracking-[-0.04em] text-off-white no-underline max-md:text-[32px] max-md:leading-[48px] ${isActive ? "pointer-events-none" : ""}`}
                 style={{
-                  opacity: visible ? 1 : 0,
+                  opacity: visible
+                    ? isActive
+                      ? 0.4
+                      : isDimmed
+                        ? 0.4
+                        : 1
+                    : 0,
                   transform: visible
                     ? "translateY(0)"
                     : "translateY(0.694vw)",
                   transition: visible
-                    ? `opacity 0.5s ease ${0.45 + i * 0.06}s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${0.45 + i * 0.06}s`
+                    ? "opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)"
                     : `opacity 0.25s ease ${(n - 1 - i) * 0.02}s, transform 0.25s ease ${(n - 1 - i) * 0.02}s`,
                 }}
               >
                 {item.label}
               </a>
             </div>
-          ))}
+            );
+          })}
           {/* Final divider */}
           <div
-            className="h-px bg-off-white/30"
+            className="h-px"
             style={{
               transformOrigin: "left",
               transform: visible ? "scaleX(1)" : "scaleX(0)",
+              background: hoveredIndex === n - 1
+                ? "rgba(255,255,255,0.8)"
+                : "rgba(255,255,255,0.3)",
               transition: visible
-                ? `transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${0.4 + n * 0.06}s`
-                : "transform 0.3s cubic-bezier(0.4, 0, 0, 1) 0s",
+                ? `transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${0.4 + n * 0.06}s, background 0.5s ease`
+                : "transform 0.3s cubic-bezier(0.4, 0, 0, 1) 0s, background 0.5s ease",
             }}
           />
         </nav>

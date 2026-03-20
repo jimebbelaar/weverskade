@@ -164,6 +164,8 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
   const [activeType, setActiveType] = useState("Alle");
   const [activeLocation, setActiveLocation] = useState("Alle");
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [typeOpen, setTypeOpen] = useState(false);
+  const [locationOpen, setLocationOpen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const navigate = usePageNavigation();
@@ -323,7 +325,10 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
         <div className="grid grid-cols-3 max-md:grid-cols-1 max-md:gap-8">
           {/* Type filters */}
           <div className="col-span-1 max-md:col-span-1">
-            <div className="flex items-center gap-[0.556vw] mb-[5vw] max-md:mb-4">
+            <button
+              onClick={() => setTypeOpen((v) => { if (v) setActiveType("Alle"); return !v; })}
+              className="flex items-center gap-[0.556vw] mb-[1.389vw] max-md:mb-3 cursor-pointer bg-transparent border-none p-0"
+            >
               <p className="font-body font-medium text-[1.25vw] leading-[2.153vw] tracking-[-0.025vw] text-off-black max-md:text-[15px]">
                 Type
               </p>
@@ -337,34 +342,54 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
                 <path d="M1 0V2.32511H8.96908L14 7V4.66872L8.96908 0H1Z" fill="currentColor" />
                 <path d="M13 12L13 9.67489L5.03092 9.67489L6.11959e-07 5L4.08153e-07 7.33128L5.03092 12L13 12Z" fill="currentColor" />
               </svg>
-            </div>
-            <div className="flex flex-wrap gap-x-[0.556vw] gap-y-[1.389vw] max-md:gap-x-3 max-md:gap-y-2">
-              {typeOptions.map((opt) => (
-                <button
-                  key={opt.label}
-                  onClick={() => setActiveType(opt.label)}
-                  className="font-heading font-normal tracking-[-0.056vw] text-off-black cursor-pointer bg-transparent border-none p-0 text-left"
-                >
-                  <span
-                    className={`text-[2.778vw] leading-[2.153vw] max-md:text-[28px] max-md:leading-normal ${
-                      activeType === opt.label
-                        ? "underline decoration-solid"
-                        : ""
-                    }`}
-                  >
-                    {opt.label}
-                  </span>
-                  <span className="text-[1.792vw] leading-[2.153vw] max-md:text-[18px] max-md:leading-normal">
-                    {` (${opt.count})`}
-                  </span>
-                </button>
-              ))}
+            </button>
+            <div
+              className="grid"
+              style={{
+                gridTemplateRows: typeOpen ? "1fr" : "0fr",
+                transition: "grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
+            >
+              <div className="overflow-hidden">
+                <div className="flex flex-wrap gap-x-[0.556vw] gap-y-[1.389vw] max-md:gap-x-3 max-md:gap-y-2">
+                  {typeOptions.map((opt, i) => (
+                    <span key={opt.label} className="overflow-hidden block py-[0.4vw] -my-[0.4vw] max-md:py-[2px] max-md:-my-[2px]">
+                      <button
+                        onClick={() => setActiveType(opt.label)}
+                        className="font-heading font-normal tracking-[-0.056vw] text-off-black cursor-pointer bg-transparent border-none p-0 text-left will-change-transform"
+                        style={{
+                          transform: typeOpen ? "translateY(0)" : "translateY(110%)",
+                          transition: typeOpen
+                            ? `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${0.05 + i * 0.08}s`
+                            : "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+                        }}
+                      >
+                        <span
+                          className={`text-[2.778vw] leading-[2.153vw] max-md:text-[28px] max-md:leading-normal ${
+                            activeType === opt.label
+                              ? "underline decoration-solid"
+                              : ""
+                          }`}
+                        >
+                          {opt.label}
+                        </span>
+                        <span className="text-[1.792vw] leading-[2.153vw] max-md:text-[18px] max-md:leading-normal">
+                          {` (${opt.count})`}
+                        </span>
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Locatie filters */}
           <div className="col-start-2 col-span-1 max-md:col-span-1 max-md:col-start-1">
-            <div className="flex items-center gap-[0.556vw] mb-[5vw] max-md:mb-4">
+            <button
+              onClick={() => setLocationOpen((v) => { if (v) setActiveLocation("Alle"); return !v; })}
+              className="flex items-center gap-[0.556vw] mb-[1.389vw] max-md:mb-3 cursor-pointer bg-transparent border-none p-0"
+            >
               <p className="font-body font-medium text-[1.25vw] leading-[2.153vw] tracking-[-0.025vw] text-off-black max-md:text-[15px]">
                 Locatie
               </p>
@@ -378,28 +403,45 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
                 <path d="M1 0V2.32511H8.96908L14 7V4.66872L8.96908 0H1Z" fill="currentColor" />
                 <path d="M13 12L13 9.67489L5.03092 9.67489L6.11959e-07 5L4.08153e-07 7.33128L5.03092 12L13 12Z" fill="currentColor" />
               </svg>
-            </div>
-            <div className="flex flex-wrap gap-x-[0.556vw] gap-y-[1.389vw] max-md:gap-x-3 max-md:gap-y-2">
-              {locationOptions.map((opt) => (
-                <button
-                  key={opt.label}
-                  onClick={() => setActiveLocation(opt.label)}
-                  className="font-heading font-normal tracking-[-0.056vw] text-off-black cursor-pointer bg-transparent border-none p-0 text-left"
-                >
-                  <span
-                    className={`text-[2.778vw] leading-[2.153vw] max-md:text-[28px] max-md:leading-normal ${
-                      activeLocation === opt.label
-                        ? "underline decoration-solid"
-                        : ""
-                    }`}
-                  >
-                    {opt.label}
-                  </span>
-                  <span className="text-[1.792vw] leading-[2.153vw] max-md:text-[18px] max-md:leading-normal">
-                    {` (${opt.count})`}
-                  </span>
-                </button>
-              ))}
+            </button>
+            <div
+              className="grid"
+              style={{
+                gridTemplateRows: locationOpen ? "1fr" : "0fr",
+                transition: "grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
+            >
+              <div className="overflow-hidden">
+                <div className="flex flex-wrap gap-x-[0.556vw] gap-y-[1.389vw] max-md:gap-x-3 max-md:gap-y-2">
+                  {locationOptions.map((opt, i) => (
+                    <span key={opt.label} className="overflow-hidden block py-[0.4vw] -my-[0.4vw] max-md:py-[2px] max-md:-my-[2px]">
+                      <button
+                        onClick={() => setActiveLocation(opt.label)}
+                        className="font-heading font-normal tracking-[-0.056vw] text-off-black cursor-pointer bg-transparent border-none p-0 text-left will-change-transform"
+                        style={{
+                          transform: locationOpen ? "translateY(0)" : "translateY(110%)",
+                          transition: locationOpen
+                            ? `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${0.05 + i * 0.08}s`
+                            : "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+                        }}
+                      >
+                        <span
+                          className={`text-[2.778vw] leading-[2.153vw] max-md:text-[28px] max-md:leading-normal ${
+                            activeLocation === opt.label
+                              ? "underline decoration-solid"
+                              : ""
+                          }`}
+                        >
+                          {opt.label}
+                        </span>
+                        <span className="text-[1.792vw] leading-[2.153vw] max-md:text-[18px] max-md:leading-normal">
+                          {` (${opt.count})`}
+                        </span>
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
