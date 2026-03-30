@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import VacatureDetailPage from "@/components/VacatureDetailPage";
 import Footer from "@/components/Footer";
+import FooterReveal from "@/components/FooterReveal";
 import { getVacatureBySlug, getAllVacatureSlugs } from "@/data/vacatures";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import {
@@ -91,7 +92,9 @@ export default async function VacatureRoute({ params }: PageProps) {
         <VacatureDetailPage vacature={vacature} />
       </div>
       <div data-nav-theme="green">
-        <Footer bg="bg-green" data={footerProps} />
+        <FooterReveal>
+          <Footer bg="bg-green" data={footerProps} />
+      </FooterReveal>
       </div>
     </>
   );

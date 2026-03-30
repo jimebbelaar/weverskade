@@ -1,5 +1,6 @@
 import ContactPage from "@/components/ContactPage";
 import Footer from "@/components/Footer";
+import FooterReveal from "@/components/FooterReveal";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import { CONTACT_PAGE_QUERY, FOOTER_QUERY } from "@/sanity/lib/queries";
 import { sanityImageUrl } from "@/sanity/lib/helpers";
@@ -42,7 +43,9 @@ export default async function Contact() {
         <ContactPage data={contactData} />
       </div>
       <div data-nav-theme="blue">
-        <Footer bg="bg-blue" data={footerProps} />
+        <FooterReveal>
+          <Footer bg="bg-blue" data={footerProps} />
+        </FooterReveal>
       </div>
     </>
   );

@@ -1,5 +1,6 @@
 import SociaalPage from "@/components/SociaalPage";
 import Footer from "@/components/Footer";
+import FooterReveal from "@/components/FooterReveal";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import {
   MAATSCHAPPELIJK_PAGE_QUERY,
@@ -50,7 +51,9 @@ export default async function Maatschappelijk() {
       <SociaalPage data={sociaalData} />
 
       <div data-nav-theme="dark">
-        <Footer bg="bg-off-black" data={footerProps} />
+        <FooterReveal>
+          <Footer bg="bg-off-black" data={footerProps} />
+        </FooterReveal>
       </div>
     </>
   );

@@ -448,7 +448,7 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
       </div>
 
       {/* Project grid */}
-      <div className="px-[2.431vw] mt-[4.583vw] max-md:px-5 max-md:mt-8">
+      <div className="px-[2.431vw] mt-[1vw] max-md:px-5 max-md:mt-8">
         <div className="grid grid-cols-3 gap-x-[1.389vw] max-md:grid-cols-1">
           {filteredProjects.map((project) => (
             <a

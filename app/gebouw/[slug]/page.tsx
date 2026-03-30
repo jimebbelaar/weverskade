@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import GebouwPage from "@/components/GebouwPage";
 import Footer from "@/components/Footer";
+import FooterReveal from "@/components/FooterReveal";
 import { getGebouwBySlug, getAllGebouwSlugs } from "@/data/gebouwen";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import {
@@ -110,7 +111,9 @@ export default async function GebouwRoute({ params }: PageProps) {
         <GebouwPage project={project} />
       </div>
       <div data-nav-theme="green">
-        <Footer bg="bg-green" data={footerProps} />
+        <FooterReveal>
+          <Footer bg="bg-green" data={footerProps} />
+      </FooterReveal>
       </div>
     </>
   );

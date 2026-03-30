@@ -4,6 +4,7 @@ import Portfolio from "@/components/Portfolio";
 import Impact from "@/components/Impact";
 import News from "@/components/News";
 import Footer from "@/components/Footer";
+import FooterReveal from "@/components/FooterReveal";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import {
   HOME_PAGE_QUERY,
@@ -112,7 +113,9 @@ export default async function Home() {
         <News data={newsProps} />
       </div>
       <div data-nav-theme="blue">
-        <Footer data={footerProps} />
+        <FooterReveal>
+          <Footer data={footerProps} />
+        </FooterReveal>
       </div>
     </>
   );

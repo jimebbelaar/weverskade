@@ -1,5 +1,6 @@
 import PortfolioPage from "@/components/PortfolioPage";
 import Footer from "@/components/Footer";
+import FooterReveal from "@/components/FooterReveal";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import {
   PORTEFEUILLE_PAGE_QUERY,
@@ -63,7 +64,9 @@ export default async function Portefeuille() {
         <PortfolioPage data={portfolioPageData} />
       </div>
       <div data-nav-theme="green">
-        <Footer bg="bg-green" data={footerProps} />
+        <FooterReveal>
+          <Footer bg="bg-green" data={footerProps} />
+      </FooterReveal>
       </div>
     </>
   );

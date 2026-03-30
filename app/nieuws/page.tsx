@@ -1,5 +1,6 @@
 import NieuwsPage from "@/components/NieuwsPage";
 import Footer from "@/components/Footer";
+import FooterReveal from "@/components/FooterReveal";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import { ALL_NIEUWS_QUERY, FOOTER_QUERY } from "@/sanity/lib/queries";
 import { sanityImageUrl, formatSanityDate } from "@/sanity/lib/helpers";
@@ -47,7 +48,9 @@ export default async function Nieuws() {
         <NieuwsPage data={nieuwsData} />
       </div>
       <div data-nav-theme="brown">
-        <Footer bg="bg-brown" data={footerProps} />
+        <FooterReveal>
+          <Footer bg="bg-brown" data={footerProps} />
+        </FooterReveal>
       </div>
     </>
   );

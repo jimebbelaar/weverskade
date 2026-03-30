@@ -1,4 +1,8 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import ScrollHeroLineSplit from "@/components/ScrollHeroLineSplit";
 
 interface IntroData {
   heading?: string;
@@ -9,10 +13,38 @@ interface IntroData {
 }
 
 export default function Intro({ data }: { data?: IntroData } = {}) {
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const [imageVisible, setImageVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setImageVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section className="bg-off-white pt-[3.611vw] px-[2.639vw] pb-[10.625vw] max-md:pt-10 max-md:px-5 max-md:pb-16">
       {/* Plant image — hidden on mobile */}
-      <div className="w-[12.847vw] h-[16.389vw] ml-[32.083vw] overflow-hidden max-md:hidden">
+      <div ref={sentinelRef} className="max-md:hidden">
+      <div
+        className="w-[12.847vw] h-[16.389vw] ml-[32.083vw] overflow-hidden"
+        style={{
+          clipPath: imageVisible ? "inset(0 0 0 0)" : "inset(100% 0 0 0)",
+          transition: imageVisible
+            ? "clip-path 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.05s"
+            : "none",
+        }}
+      >
         <Image
           src={data?.image ?? "/images/small-plant.webp"}
           alt="Groene plant"
@@ -20,14 +52,25 @@ export default function Intro({ data }: { data?: IntroData } = {}) {
           height={800}
           sizes="12.847vw"
           quality={100}
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-cover object-center will-change-transform"
+          style={{
+            transform: imageVisible ? "scale(1)" : "scale(1.2)",
+            transition: imageVisible
+              ? "transform 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.05s"
+              : "none",
+          }}
         />
+      </div>
       </div>
 
       {/* Large heading */}
-      <h2 className="font-body font-medium text-[4.028vw] leading-[4.097vw] text-off-black indent-[32.083vw] mt-[7.153vw] max-md:text-[28px] max-md:leading-[30px] max-md:indent-0 max-md:mt-0">
-        {data?.heading ?? "Weverskade is een ontwikkelende belegger in woningen en commercieel vastgoed. Door zelf te ontwikkelen en te beheren, maken we keuzes die verder kijken dan de vraag van nu."}
-      </h2>
+      <div className="mt-[7.153vw] max-md:mt-0">
+        <ScrollHeroLineSplit
+          text={data?.heading ?? "Weverskade is een ontwikkelende belegger in woningen en commercieel vastgoed. Door zelf te ontwikkelen en te beheren, maken we keuzes die verder kijken dan de vraag van nu."}
+          indent="32.083vw"
+          className="font-body font-medium text-[4.028vw] leading-[4.097vw] text-off-black max-md:text-[28px] max-md:leading-[30px]"
+        />
+      </div>
 
       {/* About row */}
       <div className="flex items-start mt-[5.556vw] gap-[2.778vw] max-md:flex-col max-md:mt-8 max-md:gap-0">

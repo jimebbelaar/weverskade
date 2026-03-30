@@ -330,9 +330,9 @@ export default function GebouwPage({ project }: GebouwPageProps) {
       <div className="px-[2.431vw] mt-[12.292vw] max-md:mt-10 max-md:px-5">
         <div className="grid grid-cols-2 max-md:grid-cols-1 max-md:gap-6">
           {/* Left column — wonen pill or empty */}
-          <div>
+          <div className="flex flex-col justify-end">
             {project.wonenBeschikbaar && (
-              <div className="overflow-hidden mt-[8.125vw] max-md:mt-0">
+              <div className="overflow-hidden max-md:mt-0">
                 <div
                   className="will-change-transform"
                   style={{

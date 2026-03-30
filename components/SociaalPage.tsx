@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useParallax } from "@/hooks/useParallax";
+import ScrollHeroLineSplit from "@/components/ScrollHeroLineSplit";
 const DEFAULT_APPROACH_ITEMS = [
   {
     number: "01",
@@ -141,9 +142,14 @@ export default function SociaalPage({ data }: { data?: SociaalPageData } = {}) {
       {/* ═══ STATEMENT — green ═══ */}
       <div data-nav-theme="green">
         <section className="bg-green px-[2.639vw] pt-[6.597vw] pb-[2.778vw] max-md:px-5 max-md:pt-10 max-md:pb-6">
-          <h2 className="font-body font-medium text-[4.028vw] leading-[4.097vw] text-off-white indent-[32.083vw] max-md:text-[28px] max-md:leading-[30px] max-md:indent-0">
-            {data?.statementHeading ?? "Bij Weverskade geloven we dat vastgoed alleen waarde heeft als het bijdraagt aan een leefomgeving die klopt. Met aandacht voor ruimte kijken we verder dan het gebouw en nemen we verantwoordelijkheid voor de omgeving eromheen."}
-          </h2>
+          <ScrollHeroLineSplit
+            text={data?.statementHeading ?? "Bij Weverskade geloven we dat vastgoed alleen waarde heeft als het bijdraagt aan een leefomgeving die klopt. Met aandacht voor ruimte kijken we verder dan het gebouw en nemen we verantwoordelijkheid voor de omgeving eromheen."}
+            indent="32.083vw"
+            delay={0.15}
+            stagger={0.08}
+            className="font-body font-medium text-[4.028vw] leading-[4.097vw] text-off-white max-md:text-[28px] max-md:leading-[30px]"
+          />
+
         </section>
       </div>
 

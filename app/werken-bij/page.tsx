@@ -1,5 +1,6 @@
 import WerkenBijPage from "@/components/WerkenBijPage";
 import Footer from "@/components/Footer";
+import FooterReveal from "@/components/FooterReveal";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import {
   WERKEN_BIJ_PAGE_QUERY,
@@ -50,7 +51,9 @@ export default async function WerkenBij() {
         <WerkenBijPage data={werkenData} />
       </div>
       <div data-nav-theme="blue">
-        <Footer bg="bg-blue" data={footerProps} />
+        <FooterReveal>
+          <Footer bg="bg-blue" data={footerProps} />
+      </FooterReveal>
       </div>
     </>
   );

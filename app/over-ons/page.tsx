@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Footer from "@/components/Footer";
+import FooterReveal from "@/components/FooterReveal";
 import Impact from "@/components/Impact";
 import AerialParallax from "@/components/AerialParallax";
 import CTASection from "@/components/CTASection";
 import HeroOverOns from "@/components/HeroOverOns";
+import ScrollHeroLineSplit from "@/components/ScrollHeroLineSplit";
 import TeamGrid from "@/components/TeamGrid";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import {
@@ -89,9 +91,11 @@ export default async function OverOns() {
       {/* Intro text + story */}
       <div data-nav-theme="light">
         <section className="bg-off-white px-[2.639vw] pb-[14.167vw] max-md:px-0 max-md:pb-16">
-          <h2 className="font-body font-medium text-[3.958vw] leading-[4.097vw] text-off-black indent-[15.278vw] max-md:text-[28px] max-md:leading-[30px] max-md:indent-0 max-md:px-5">
-            {storyHeading}
-          </h2>
+          <ScrollHeroLineSplit
+            text={storyHeading}
+            indent="15.278vw"
+            className="font-body font-medium text-[3.958vw] leading-[4.097vw] text-off-black max-md:text-[28px] max-md:leading-[30px] max-md:px-5"
+          />
 
           <div className="flex items-start mt-[13.056vw] gap-[5.972vw] max-md:flex-col max-md:mt-8 max-md:gap-8">
             <div className="w-[42.083vw] h-[50.347vw] overflow-hidden shrink-0 max-md:w-full max-md:h-[130vw]">
@@ -250,7 +254,9 @@ export default async function OverOns() {
 
       {/* Footer */}
       <div data-nav-theme="dark">
-        <Footer bg="bg-off-black" data={footerProps} />
+        <FooterReveal>
+          <Footer bg="bg-off-black" data={footerProps} />
+        </FooterReveal>
       </div>
     </>
   );

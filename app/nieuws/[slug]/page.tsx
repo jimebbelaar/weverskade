@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import NieuwsDetailPage from "@/components/NieuwsDetailPage";
 import Footer from "@/components/Footer";
+import FooterReveal from "@/components/FooterReveal";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import {
   NIEUWS_BY_SLUG_QUERY,
@@ -77,7 +78,9 @@ export default async function NieuwsDetail({ params }: PageProps) {
         <NieuwsDetailPage data={articleData} />
       </div>
       <div data-nav-theme="green">
-        <Footer bg="bg-green" data={footerProps} />
+        <FooterReveal>
+          <Footer bg="bg-green" data={footerProps} />
+      </FooterReveal>
       </div>
     </>
   );
