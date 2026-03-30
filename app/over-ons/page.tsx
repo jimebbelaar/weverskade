@@ -6,6 +6,7 @@ import AerialParallax from "@/components/AerialParallax";
 import CTASection from "@/components/CTASection";
 import HeroOverOns from "@/components/HeroOverOns";
 import ScrollHeroLineSplit from "@/components/ScrollHeroLineSplit";
+import StatsGrid from "@/components/StatsGrid";
 import TeamGrid from "@/components/TeamGrid";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import {
@@ -209,18 +210,7 @@ export default async function OverOns() {
             <p className="font-heading font-normal text-[1.389vw] leading-[1.2] text-off-black shrink-0 w-[32.222vw] max-md:w-auto max-md:text-[17px]">
               {pageData?.factsLabel ?? "Feiten en cijfers"}
             </p>
-            <div className="grid grid-cols-[22.708vw_22.708vw] gap-x-[1.389vw] gap-y-[4.583vw] max-md:grid-cols-2 max-md:gap-x-5 max-md:gap-y-8">
-              {stats.map((item: any) => (
-                <div key={item.value + item.label}>
-                  <p className="font-heading font-normal text-[3.194vw] leading-[2.153vw] tracking-[-0.064vw] text-off-black mb-[1.389vw] max-md:text-[28px] max-md:leading-normal max-md:tracking-[-0.56px] max-md:mb-2">
-                    {item.value}
-                  </p>
-                  <p className="font-body font-medium text-[1.389vw] leading-[1.875vw] tracking-[-0.028vw] text-off-black max-md:text-[15px] max-md:leading-[20px] max-md:tracking-[-0.3px]">
-                    {item.label}
-                  </p>
-                </div>
-              ))}
-            </div>
+            <StatsGrid items={stats} />
           </div>
         </section>
       </div>
