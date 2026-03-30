@@ -192,11 +192,11 @@ export default function Navbar() {
               navigate(e, "/");
             }
           }}
-          className="block w-[23.611vw] h-[3.056vw] shrink-0 max-md:w-[55vw] max-md:h-auto"
+          className="block w-[18.889vw] h-[2.445vw] shrink-0 max-md:w-[44vw] max-md:h-auto"
           aria-label="Weverskade home"
         >
           <svg
-            viewBox="0 0 340 44"
+            viewBox="0 0 344 44"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             className="w-full h-full"
@@ -257,16 +257,19 @@ export default function Navbar() {
         </a>
 
         <button
-          className="flex items-center justify-center w-[3.606vw] h-[3.056vw] p-0 shrink-0 cursor-pointer bg-transparent border-none max-md:w-[8.4vw] max-md:h-[7.12vw]"
+          className="flex items-center gap-[0.556vw] p-0 shrink-0 cursor-pointer bg-transparent border-none transition-opacity duration-200 ease-in-out hover:opacity-70 max-md:gap-[1.5vw]"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((prev) => !prev)}
         >
+          <span className="font-body font-medium text-[0.972vw] leading-none tracking-[-0.04em] max-md:text-[13px]">
+            Menu
+          </span>
           <svg
             viewBox="0 0 59 50"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-[3.606vw] h-[3.056vw] transition-opacity duration-200 ease-in-out hover:opacity-70 max-md:w-[8.4vw] max-md:h-[7.12vw]"
+            className="w-[3.606vw] h-[3.056vw] max-md:w-[8.4vw] max-md:h-[7.12vw]"
           >
             <path
               d="M8.0437 28.4972L24.78 43.6251H51.2907V36.0911H24.78L8.0437 20.9632V28.4972Z"

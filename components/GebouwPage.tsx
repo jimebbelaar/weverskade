@@ -298,7 +298,7 @@ export default function GebouwPage({ project }: GebouwPageProps) {
           {/* Project name — mask-slide */}
           <div className="overflow-hidden">
             <h1
-              className="font-body font-medium text-[4.931vw] leading-normal tracking-[-0.099vw] text-off-black will-change-transform max-md:text-[36px] max-md:tracking-[-0.72px]"
+              className="font-body font-medium text-[4.931vw] leading-[1.1] tracking-[-0.099vw] text-off-black will-change-transform max-md:text-[36px] max-md:tracking-[-0.72px]"
               style={{
                 transform: animate ? "translateY(0)" : "translateY(110%)",
                 transition: animate
@@ -312,7 +312,7 @@ export default function GebouwPage({ project }: GebouwPageProps) {
           {/* Tagline — same grid column as details below */}
           <div className="overflow-hidden">
             <p
-              className="font-heading font-normal text-[4.931vw] leading-normal tracking-[-0.099vw] text-off-black will-change-transform max-md:text-[36px] max-md:tracking-[-0.72px]"
+              className="font-heading font-normal text-[4.931vw] leading-[1.1] tracking-[-0.099vw] text-off-black will-change-transform max-md:text-[36px] max-md:tracking-[-0.72px]"
               style={{
                 transform: animate ? "translateY(0)" : "translateY(110%)",
                 transition: animate
@@ -574,40 +574,34 @@ function WonenFormSection({
             <div className="grid grid-cols-2 gap-x-[2.431vw] gap-y-[2.083vw] max-md:grid-cols-1 max-md:gap-y-6">
               {/* Name */}
               <div>
-                <label className="block font-body font-medium text-[1.319vw] text-off-black mb-[0.694vw] max-md:text-[15px] max-md:mb-2">
-                  Naam
-                </label>
                 <input
                   type="text"
+                  placeholder="Naam"
                   value={formData.name}
                   onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))}
-                  className="w-full bg-transparent border-b border-off-black pb-[0.694vw] font-body font-medium text-[1.319vw] text-off-black outline-none max-md:text-[15px] max-md:pb-2"
+                  className="w-full bg-transparent border-b border-off-black pb-[0.694vw] font-body font-medium text-[1.319vw] text-off-black placeholder:text-off-black outline-none max-md:text-[15px] max-md:pb-2"
                 />
               </div>
               {/* Email */}
               <div>
-                <label className="block font-body font-medium text-[1.319vw] text-off-black mb-[0.694vw] max-md:text-[15px] max-md:mb-2">
-                  Emailadres
-                </label>
                 <input
                   type="email"
+                  placeholder="Emailadres"
                   value={formData.email}
                   onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))}
-                  className="w-full bg-transparent border-b border-off-black pb-[0.694vw] font-body font-medium text-[1.319vw] text-off-black outline-none max-md:text-[15px] max-md:pb-2"
+                  className="w-full bg-transparent border-b border-off-black pb-[0.694vw] font-body font-medium text-[1.319vw] text-off-black placeholder:text-off-black outline-none max-md:text-[15px] max-md:pb-2"
                 />
               </div>
             </div>
 
             {/* Message */}
             <div className="mt-[2.083vw] max-md:mt-6">
-              <label className="block font-body font-medium text-[1.319vw] text-off-black mb-[0.694vw] max-md:text-[15px] max-md:mb-2">
-                Eventuele vraag of opmerking
-              </label>
               <textarea
+                placeholder="Eventuele vraag of opmerking"
                 value={formData.message}
                 onChange={(e) => setFormData((p) => ({ ...p, message: e.target.value }))}
                 rows={1}
-                className="w-full bg-transparent border-b border-off-black pb-[0.694vw] font-body font-medium text-[1.319vw] text-off-black outline-none resize-none max-md:text-[15px] max-md:pb-2"
+                className="w-full bg-transparent border-b border-off-black pb-[0.694vw] font-body font-medium text-[1.319vw] text-off-black placeholder:text-off-black outline-none resize-none max-md:text-[15px] max-md:pb-2"
               />
             </div>
 

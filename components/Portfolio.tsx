@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { usePortfolioSlider } from "@/hooks/usePortfolioSlider";
 import { usePageNavigation } from "@/hooks/usePageNavigation";
@@ -43,6 +43,7 @@ export default function Portfolio({ data }: { data?: PortfolioData } = {}) {
   const navigate = usePageNavigation();
   const draggedRef = useRef(false);
   const pointerStartRef = useRef({ x: 0, y: 0 });
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   const portfolioUrl = data?.linkUrl ?? "/portefeuille";
 
@@ -123,7 +124,11 @@ export default function Portfolio({ data }: { data?: PortfolioData } = {}) {
                 className="block cursor-pointer"
                 draggable={false}
               >
-                <div className="w-full aspect-[443/479] overflow-hidden max-md:aspect-[362/340]">
+                <div
+                  className="relative w-full aspect-[443/479] overflow-hidden max-md:aspect-[362/340]"
+                  onMouseEnter={() => setHoveredCard(i)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                >
                   <Image
                     src={card.image}
                     alt={card.title}
@@ -132,8 +137,55 @@ export default function Portfolio({ data }: { data?: PortfolioData } = {}) {
                     sizes="(max-width: 768px) calc(100vw - 40px), 30.787vw"
                     quality={100}
                     draggable={false}
-                    className="w-full h-full object-cover object-center pointer-events-none"
+                    className="w-full h-full object-cover object-center pointer-events-none transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                    style={{
+                      transform: hoveredCard === i ? "scale(1.05)" : "scale(1)",
+                    }}
                   />
+                  <div
+                    className={`absolute inset-0 bg-off-black transition-opacity duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                      hoveredCard === i ? "opacity-57" : "opacity-0"
+                    }`}
+                  />
+                  <div
+                    className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                      hoveredCard === i ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    <svg
+                      width="43"
+                      height="23"
+                      viewBox="0 0 43 23"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="absolute top-[1.389vw] right-[1.389vw] w-[2.986vw] h-[1.597vw] max-md:top-3 max-md:right-3 max-md:w-[24px] max-md:h-[13px] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                      style={{
+                        transform: hoveredCard === i
+                          ? "translate(0, 0) rotate(0deg)"
+                          : "translate(-2vw, 2vw) rotate(-8deg)",
+                      }}
+                    >
+                      <path d="M0 0V7.63965H26.3593L43 23V15.3401L26.3593 0H0Z" fill="#F7F5F0" />
+                    </svg>
+                    <svg
+                      width="42"
+                      height="23"
+                      viewBox="0 0 42 23"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="absolute bottom-[1.389vw] left-[1.389vw] w-[2.917vw] h-[1.597vw] max-md:bottom-3 max-md:left-3 max-md:w-[24px] max-md:h-[13px] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                      style={{
+                        transform: hoveredCard === i
+                          ? "rotate(180deg) translate(0, 0)"
+                          : "rotate(180deg) translate(-2vw, 2vw) rotate(-8deg)",
+                      }}
+                    >
+                      <path d="M0 0V7.63965H25.7462L42 23V15.3401L25.7462 0H0Z" fill="#F7F5F0" />
+                    </svg>
+                    <span className="font-body font-medium text-[1.944vw] text-off-white underline decoration-solid max-md:text-[14px]">
+                      Bekijk project
+                    </span>
+                  </div>
                 </div>
                 <div className="pt-[0.486vw] max-md:pt-2">
                   <p className="font-body font-medium text-[1.389vw] leading-[1.597vw] text-off-black max-md:text-[20px] max-md:leading-normal">

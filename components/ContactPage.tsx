@@ -101,7 +101,7 @@ export default function ContactPage({ data }: { data?: ContactPageData } = {}) {
 
           {/* Form — Figma: fields 444px (30.833vw) wide */}
           <form
-            className="mt-[5.278vw] max-md:mt-10"
+            className="mt-[2.5vw] max-md:mt-6"
             onSubmit={(e) => e.preventDefault()}
           >
             {/* Uw naam */}

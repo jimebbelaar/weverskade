@@ -78,7 +78,7 @@ export default function News({ data }: { data?: NewsData } = {}) {
 
               {/* Content column */}
               <div className="flex-1 min-w-0">
-                <h3 className="font-body font-medium text-[2.639vw] leading-[2.708vw] text-off-black max-w-[32.778vw]">
+                <h3 className="font-body font-medium text-[2.111vw] leading-[2.167vw] text-off-black max-w-[32.778vw] line-clamp-3">
                   {article.title}
                 </h3>
                 <a
