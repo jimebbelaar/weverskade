@@ -60,7 +60,7 @@ export default function NieuwsPage({ data }: { data?: NieuwsPageData } = {}) {
       <div className="pt-[13.194vw] px-[2.431vw] pb-[2.778vw] max-md:pt-[28vw] max-md:px-5 max-md:pb-6">
         <div className="overflow-hidden">
           <h1
-            className="font-heading font-normal text-[5.556vw] leading-normal tracking-[-0.111vw] text-off-black max-md:text-[40px] max-md:tracking-[-0.8px] will-change-transform"
+            className="font-heading font-normal text-[5.556vw] leading-[1.05] tracking-[-0.111vw] text-off-black max-md:text-[40px] max-md:leading-[42px] max-md:tracking-[-0.8px] will-change-transform"
             style={{
               transform: animate ? "translateY(0)" : "translateY(110%)",
               transition: animate

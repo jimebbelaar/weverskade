@@ -131,6 +131,13 @@ export const project = defineType({
       title: 'Hero afbeelding',
       type: 'image',
       options: { hotspot: true },
+      description: 'Wordt gebruikt als er geen Hero video URL is ingevuld.',
+    }),
+    defineField({
+      name: 'heroVideoUrl',
+      title: 'Hero Vimeo video URL',
+      type: 'url',
+      description: 'Optioneel. Als ingevuld, wordt de video als achtergrond loop afgespeeld (zonder geluid) in plaats van de hero afbeelding. Bijv. https://vimeo.com/123456789',
     }),
     defineField({
       name: 'fullWidthImage',

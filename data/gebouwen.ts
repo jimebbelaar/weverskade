@@ -13,6 +13,7 @@ export interface GebouwProject {
   wonenBeschikbaar: boolean;
   wonenSize?: string;
   heroImage: string;
+  heroVideoUrl?: string;
   fullWidthImage: string;
   smallImages: [string, string];
   descriptionLeft: string;

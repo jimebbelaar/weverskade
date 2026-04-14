@@ -11,6 +11,37 @@ interface GebouwPageProps {
   project: GebouwProject;
 }
 
+function parseVimeoUrl(url: string): { id: string; hash?: string } | null {
+  const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)(?:\/([a-zA-Z0-9]+))?/);
+  if (!match) return null;
+  return { id: match[1], hash: match[2] };
+}
+
+function VimeoBackground({ url }: { url: string }) {
+  const parsed = parseVimeoUrl(url);
+  if (!parsed) return null;
+  const params = new URLSearchParams({
+    background: "1",
+    autoplay: "1",
+    loop: "1",
+    muted: "1",
+    autopause: "0",
+  });
+  if (parsed.hash) params.set("h", parsed.hash);
+  const src = `https://player.vimeo.com/video/${parsed.id}?${params.toString()}`;
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      <iframe
+        src={src}
+        title="Hero video"
+        allow="autoplay; fullscreen; picture-in-picture"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[177.78vh] h-[56.25vw] min-w-full min-h-full"
+        frameBorder={0}
+      />
+    </div>
+  );
+}
+
 /* ─── Detail line mask-slide helper ─── */
 function DetailLine({
   children,
@@ -392,17 +423,21 @@ export default function GebouwPage({ project }: GebouwPageProps) {
               : "none",
           }}
         >
-          <Image
-            ref={heroImgRef}
-            src={project.heroImage}
-            alt={project.name}
-            width={2400}
-            height={1800}
-            sizes="95vw"
-            className="absolute inset-0 w-full h-[120%] object-cover will-change-transform"
-            style={{ transform: "translateY(-10%)" }}
-            priority
-          />
+          {project.heroVideoUrl ? (
+            <VimeoBackground url={project.heroVideoUrl} />
+          ) : (
+            <Image
+              ref={heroImgRef}
+              src={project.heroImage}
+              alt={project.name}
+              width={2400}
+              height={1800}
+              sizes="95vw"
+              className="absolute inset-0 w-full h-[120%] object-cover will-change-transform"
+              style={{ transform: "translateY(-10%)" }}
+              priority
+            />
+          )}
         </div>
       </div>
 

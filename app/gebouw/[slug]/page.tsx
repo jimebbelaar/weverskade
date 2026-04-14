@@ -71,6 +71,7 @@ export default async function GebouwRoute({ params }: PageProps) {
       year: sanityProject.year ?? localProject?.year,
       wonenBeschikbaar: sanityProject.wonenBeschikbaar ?? localProject?.wonenBeschikbaar ?? false,
       heroImage: sanityImageUrl(sanityProject.heroImage, localProject?.heroImage ?? "/images/portfolio-hero.webp"),
+      heroVideoUrl: sanityProject.heroVideoUrl ?? localProject?.heroVideoUrl,
       fullWidthImage: sanityImageUrl(sanityProject.fullWidthImage, localProject?.fullWidthImage ?? "/images/portfolio-hero.webp"),
       smallImages: sanityProject.smallImages?.length > 0
         ? sanityProject.smallImages.map((img: any) => sanityImageUrl(img, "/images/portfolio-1.webp"))

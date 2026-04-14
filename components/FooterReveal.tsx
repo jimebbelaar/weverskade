@@ -16,6 +16,7 @@ export default function FooterReveal({
     if (!wrap || !inner) return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(max-width: 767px)").matches) return;
 
     let ticking = false;
 

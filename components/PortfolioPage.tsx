@@ -245,7 +245,7 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
         {/* Left: title + subtitle */}
         <div className="shrink-0 max-w-[36.042vw] max-md:max-w-full">
           {/* ── Title mask-slide ── */}
-          <h1 className="font-heading font-normal text-[5.556vw] leading-normal tracking-[-0.111vw] text-off-black max-md:text-[40px] max-md:tracking-[-0.8px] overflow-hidden">
+          <h1 className="font-heading font-normal text-[5.556vw] leading-[1.05] tracking-[-0.111vw] text-off-black max-md:text-[40px] max-md:leading-[42px] max-md:tracking-[-0.8px] overflow-hidden">
             <span
               className="inline-block will-change-transform"
               style={{
