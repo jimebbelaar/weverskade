@@ -53,6 +53,17 @@ function HeroLineSplit({
 }) {
   const measureRef = useRef<HTMLHeadingElement>(null);
   const [lines, setLines] = useState<string[] | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  const effectiveIndent = isMobile ? "0" : indent;
 
   const splitLines = useCallback(() => {
     const el = measureRef.current;
@@ -116,7 +127,7 @@ function HeroLineSplit({
       <h1
         ref={measureRef}
         className={className}
-        style={{ visibility: "hidden", textIndent: indent }}
+        style={{ visibility: "hidden", textIndent: effectiveIndent }}
       >
         {text}
       </h1>
@@ -134,7 +145,7 @@ function HeroLineSplit({
               transition: animate
                 ? `transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay + i * stagger}s`
                 : "none",
-              ...(i === 0 ? { paddingLeft: indent } : {}),
+              ...(i === 0 ? { paddingLeft: effectiveIndent } : {}),
             }}
           >
             {line}

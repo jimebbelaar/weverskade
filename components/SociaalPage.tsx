@@ -40,6 +40,11 @@ export default function SociaalPage({ data }: { data?: SociaalPageData } = {}) {
   const [animate, setAnimate] = useState(false);
   const { bgRef, heroRef } = useParallax();
   const circleRef = useRef<HTMLDivElement>(null);
+  const impactBlock1Ref = useRef<HTMLDivElement>(null);
+  const impactBlock2Ref = useRef<HTMLDivElement>(null);
+  const impactBlock3Ref = useRef<HTMLDivElement>(null);
+  const impactCtaRef = useRef<HTMLDivElement>(null);
+  const [visibleBlocks, setVisibleBlocks] = useState<Set<string>>(new Set());
 
   // Entry animation
   useEffect(() => {
@@ -106,6 +111,41 @@ export default function SociaalPage({ data }: { data?: SociaalPageData } = {}) {
       window.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(rafId);
     };
+  }, []);
+
+  // Impact blocks scroll-triggered reveal
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisibleBlocks(new Set(["block1", "block2", "block3", "cta"]));
+      return;
+    }
+
+    const entries = [
+      { ref: impactBlock1Ref, key: "block1" },
+      { ref: impactBlock2Ref, key: "block2" },
+      { ref: impactBlock3Ref, key: "block3" },
+      { ref: impactCtaRef, key: "cta" },
+    ];
+
+    const observers: IntersectionObserver[] = [];
+
+    entries.forEach(({ ref, key }) => {
+      const el = ref.current;
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setVisibleBlocks((prev) => new Set([...prev, key]));
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.3, rootMargin: "-10% 0px" },
+      );
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
   }, []);
 
   return (
@@ -216,56 +256,100 @@ export default function SociaalPage({ data }: { data?: SociaalPageData } = {}) {
             </div>
           </div>
 
-          {/* Bottom-right Weverskade icon */}
-          <div className="flex justify-end">
-            <svg
-              viewBox="0 0 97 51"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-[4.097vw] h-[3.472vw] max-md:w-[40px] max-md:h-[22px]"
-            >
-              <path
-                d="M0 0V16.9401H59.4616L97 51V34.015L59.4616 0H0Z"
-                fill="#F7F5F0"
-              />
-            </svg>
-          </div>
+          {/* Top-right Weverskade bracket */}
+          <svg
+            viewBox="0 0 97 51"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="absolute top-[3.819vw] right-[2.639vw] w-[4.097vw] h-[3.472vw] max-md:w-[40px] max-md:h-[22px] max-md:top-10 max-md:right-5"
+          >
+            <path
+              d="M0 0V16.9401H59.4616L97 51V34.015L59.4616 0H0Z"
+              fill="#F7F5F0"
+            />
+          </svg>
+
+          {/* Bottom-left Weverskade bracket */}
+          <svg
+            viewBox="0 0 97 51"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="absolute bottom-[3.472vw] left-[2.639vw] w-[4.097vw] h-[3.472vw] max-md:w-[40px] max-md:h-[22px] max-md:bottom-10 max-md:left-5"
+          >
+            <path
+              d="M0 16.955L37.5384 51H97V34.045H37.5384L0 0V16.955Z"
+              fill="#F7F5F0"
+            />
+          </svg>
         </section>
       </div>
 
       {/* ═══ IMPACT — brown ═══ */}
       <div data-nav-theme="brown">
         <section className="bg-brown pt-[9.931vw] pb-[11.111vw] px-[2.431vw] max-md:pt-12 max-md:pb-12 max-md:px-5">
-          {/* Big heading */}
+          {/* Big heading — scroll-triggered line split */}
           <div className="pl-[14.236vw] max-md:pl-0">
-            <h2 className="font-body font-medium text-[5.556vw] leading-[5.556vw] text-off-black max-w-[59.514vw] max-md:text-[32px] max-md:leading-[34px] max-md:max-w-none">
-              Het goede doen, ook als niemand daarom vraagt
-            </h2>
+            <ScrollHeroLineSplit
+              text="Het goede doen, ook als niemand daarom vraagt"
+              tag="h2"
+              className="font-body font-medium text-[5.556vw] leading-[5.556vw] text-off-black max-w-[59.514vw] max-md:text-[32px] max-md:leading-[34px] max-md:max-w-none"
+            />
           </div>
 
           {/* ── Block 1: Samen naar een CO₂-neutrale wereld ── */}
-          {/* Text right + images below (small left, larger right) */}
-          <div className="flex mt-[6.528vw] max-md:block max-md:mt-8">
+          <div ref={impactBlock1Ref} className="flex mt-[6.528vw] max-md:block max-md:mt-8">
             {/* Left spacer + small image stacked */}
             <div className="w-[27.5vw] shrink-0 max-md:w-full">
-              <div className="mt-[14.444vw] w-full h-[27.083vw] overflow-hidden max-md:mt-6 max-md:h-[65vw]">
+              <div
+                className="mt-[14.444vw] w-full h-[27.083vw] overflow-hidden max-md:mt-6 max-md:h-[65vw] will-change-[clip-path]"
+                style={{
+                  clipPath: visibleBlocks.has("block1") ? "inset(0 0 0 0)" : "inset(100% 0 0 0)",
+                  transition: visibleBlocks.has("block1")
+                    ? "clip-path 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s"
+                    : "none",
+                }}
+              >
                 <Image
                   src="/images/sociaal-mensen.webp"
                   alt="Mensen bij Weverskade"
                   width={1200}
                   height={900}
                   sizes="(max-width: 768px) 100vw, 27.5vw"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover will-change-transform"
+                  style={{
+                    transform: visibleBlocks.has("block1") ? "scale(1)" : "scale(1.2)",
+                    transition: visibleBlocks.has("block1")
+                      ? "transform 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s"
+                      : "none",
+                  }}
                 />
               </div>
             </div>
 
             {/* Right column: label + text + image */}
             <div className="ml-auto max-w-[41.25vw] max-md:max-w-none max-md:ml-0">
-              <p className="font-heading font-normal text-[1.389vw] leading-[1.2] text-off-black mb-[1.389vw] max-md:text-[17px] max-md:mb-3 max-md:mt-6">
+              <p
+                className="font-heading font-normal text-[1.389vw] leading-[1.2] text-off-black mb-[1.389vw] max-md:text-[17px] max-md:mb-3 max-md:mt-6"
+                style={{
+                  opacity: visibleBlocks.has("block1") ? 1 : 0,
+                  transform: visibleBlocks.has("block1") ? "translateY(0)" : "translateY(20px)",
+                  transition: visibleBlocks.has("block1")
+                    ? "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)"
+                    : "none",
+                }}
+              >
                 Samen naar een CO₂-neutrale wereld
               </p>
-              <p className="font-body font-medium text-[1.597vw] leading-[2.153vw] tracking-[-0.032vw] text-off-black max-w-[33.819vw] max-md:text-[17px] max-md:leading-[22px] max-md:tracking-[-0.34px] max-md:max-w-none">
+              <p
+                className="font-body font-medium text-[1.597vw] leading-[2.153vw] tracking-[-0.032vw] text-off-black max-w-[33.819vw] max-md:text-[17px] max-md:leading-[22px] max-md:tracking-[-0.34px] max-md:max-w-none"
+                style={{
+                  opacity: visibleBlocks.has("block1") ? 1 : 0,
+                  transform: visibleBlocks.has("block1") ? "translateY(0)" : "translateY(20px)",
+                  transition: visibleBlocks.has("block1")
+                    ? "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s"
+                    : "none",
+                }}
+              >
                 We werken stap voor stap aan een portefeuille die op lange
                 termijn CO₂-neutraal kan opereren. Door gebouwen te verbeteren,
                 te verduurzamen en toekomstbestendig te maken, nemen we
@@ -273,27 +357,58 @@ export default function SociaalPage({ data }: { data?: SociaalPageData } = {}) {
                 losse ambitie, maar als vanzelfsprekend onderdeel van hoe we
                 ontwikkelen en beheren. Voor nu en de generaties na ons.
               </p>
-              <div className="w-[38.819vw] h-[25.833vw] overflow-hidden mt-[6.944vw] max-md:w-full max-md:h-[65vw] max-md:mt-6">
+              <div
+                className="w-[38.819vw] h-[25.833vw] overflow-hidden mt-[6.944vw] max-md:w-full max-md:h-[65vw] max-md:mt-6 will-change-[clip-path]"
+                style={{
+                  clipPath: visibleBlocks.has("block1") ? "inset(0 0 0 0)" : "inset(100% 0 0 0)",
+                  transition: visibleBlocks.has("block1")
+                    ? "clip-path 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s"
+                    : "none",
+                }}
+              >
                 <Image
                   src="/images/sociaal-co2.webp"
                   alt="Duurzaam gebouw"
                   width={1200}
                   height={900}
                   sizes="(max-width: 768px) 100vw, 38.819vw"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover will-change-transform"
+                  style={{
+                    transform: visibleBlocks.has("block1") ? "scale(1)" : "scale(1.2)",
+                    transition: visibleBlocks.has("block1")
+                      ? "transform 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s"
+                      : "none",
+                  }}
                 />
               </div>
             </div>
           </div>
 
           {/* ── Block 2: Kwalitatieve huisvesting ── */}
-          {/* Overlaps slightly with Block 1 right image in Figma */}
-          <div className="mt-[-6.667vw] max-md:mt-10">
+          <div ref={impactBlock2Ref} className="mt-[-6.667vw] max-md:mt-10">
             <div className="pl-[5.903vw] max-md:pl-0">
-              <p className="font-heading font-normal text-[1.389vw] leading-[1.2] text-off-black mb-[1.389vw] max-md:text-[17px] max-md:mb-3">
+              <p
+                className="font-heading font-normal text-[1.389vw] leading-[1.2] text-off-black mb-[1.389vw] max-md:text-[17px] max-md:mb-3"
+                style={{
+                  opacity: visibleBlocks.has("block2") ? 1 : 0,
+                  transform: visibleBlocks.has("block2") ? "translateY(0)" : "translateY(20px)",
+                  transition: visibleBlocks.has("block2")
+                    ? "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)"
+                    : "none",
+                }}
+              >
                 Kwalitatieve huisvesting wanneer het nodig is
               </p>
-              <p className="font-body font-medium text-[1.597vw] leading-[2.153vw] tracking-[-0.032vw] text-off-black max-w-[33.819vw] max-md:text-[17px] max-md:leading-[22px] max-md:tracking-[-0.34px] max-md:max-w-none">
+              <p
+                className="font-body font-medium text-[1.597vw] leading-[2.153vw] tracking-[-0.032vw] text-off-black max-w-[33.819vw] max-md:text-[17px] max-md:leading-[22px] max-md:tracking-[-0.34px] max-md:max-w-none"
+                style={{
+                  opacity: visibleBlocks.has("block2") ? 1 : 0,
+                  transform: visibleBlocks.has("block2") ? "translateY(0)" : "translateY(20px)",
+                  transition: visibleBlocks.has("block2")
+                    ? "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s"
+                    : "none",
+                }}
+              >
                 We bieden huisvesting voor een breed publiek. Ook wanneer
                 snelheid gevraagd wordt, doen we geen concessies aan kwaliteit.
                 Bij de woningen voor Oekraïense ontheemden vonden we het
@@ -306,25 +421,57 @@ export default function SociaalPage({ data }: { data?: SociaalPageData } = {}) {
           </div>
 
           {/* ── Block 3: Verduurzamen ── */}
-          <div className="flex items-start mt-[8.333vw] max-md:flex-col max-md:gap-6 max-md:mt-10">
+          <div ref={impactBlock3Ref} className="flex items-start mt-[8.333vw] max-md:flex-col max-md:gap-6 max-md:mt-10">
             {/* Large image left */}
-            <div className="w-[38.819vw] h-[41.944vw] overflow-hidden shrink-0 max-md:w-full max-md:h-[85vw]">
+            <div
+              className="w-[38.819vw] h-[41.944vw] overflow-hidden shrink-0 max-md:w-full max-md:h-[85vw] will-change-[clip-path]"
+              style={{
+                clipPath: visibleBlocks.has("block3") ? "inset(0 0 0 0)" : "inset(100% 0 0 0)",
+                transition: visibleBlocks.has("block3")
+                  ? "clip-path 1.1s cubic-bezier(0.16, 1, 0.3, 1)"
+                  : "none",
+              }}
+            >
               <Image
                 src="/images/sociaal-verduurzamen.webp"
                 alt="Verduurzaming gebouwen"
                 width={1200}
                 height={900}
                 sizes="(max-width: 768px) 100vw, 38.819vw"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover will-change-transform"
+                style={{
+                  transform: visibleBlocks.has("block3") ? "scale(1)" : "scale(1.2)",
+                  transition: visibleBlocks.has("block3")
+                    ? "transform 1.6s cubic-bezier(0.16, 1, 0.3, 1)"
+                    : "none",
+                }}
               />
             </div>
 
             {/* Text right — pushed to the 58.33% column position */}
             <div className="ml-auto max-w-[38.819vw] max-md:ml-0 max-md:max-w-none max-md:w-full">
-              <p className="font-heading font-normal text-[1.389vw] leading-[1.2] text-off-black mb-[1.389vw] max-md:text-[17px] max-md:mb-3">
+              <p
+                className="font-heading font-normal text-[1.389vw] leading-[1.2] text-off-black mb-[1.389vw] max-md:text-[17px] max-md:mb-3"
+                style={{
+                  opacity: visibleBlocks.has("block3") ? 1 : 0,
+                  transform: visibleBlocks.has("block3") ? "translateY(0)" : "translateY(20px)",
+                  transition: visibleBlocks.has("block3")
+                    ? "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s"
+                    : "none",
+                }}
+              >
                 Verduurzamen van wat er al is
               </p>
-              <p className="font-body font-medium text-[1.597vw] leading-[2.153vw] tracking-[-0.032vw] text-off-black max-w-[33.819vw] max-md:text-[17px] max-md:leading-[22px] max-md:tracking-[-0.34px] max-md:max-w-none">
+              <p
+                className="font-body font-medium text-[1.597vw] leading-[2.153vw] tracking-[-0.032vw] text-off-black max-w-[33.819vw] max-md:text-[17px] max-md:leading-[22px] max-md:tracking-[-0.34px] max-md:max-w-none"
+                style={{
+                  opacity: visibleBlocks.has("block3") ? 1 : 0,
+                  transform: visibleBlocks.has("block3") ? "translateY(0)" : "translateY(20px)",
+                  transition: visibleBlocks.has("block3")
+                    ? "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.25s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.25s"
+                    : "none",
+                }}
+              >
                 We geloven dat goed vastgoed niet altijd nieuw hoeft te zijn.
                 Door bestaande gebouwen zorgvuldig te verbeteren en te
                 verduurzamen, verlengen we hun levensduur en versterken we hun
@@ -335,7 +482,17 @@ export default function SociaalPage({ data }: { data?: SociaalPageData } = {}) {
           </div>
 
           {/* ── CTA — brown inline ── */}
-          <div className="pt-[11.389vw] pb-[5.556vw] max-md:pt-16 max-md:pb-8">
+          <div
+            ref={impactCtaRef}
+            className="pt-[11.389vw] pb-[5.556vw] max-md:pt-16 max-md:pb-8"
+            style={{
+              opacity: visibleBlocks.has("cta") ? 1 : 0,
+              transform: visibleBlocks.has("cta") ? "translateY(0)" : "translateY(20px)",
+              transition: visibleBlocks.has("cta")
+                ? "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)"
+                : "none",
+            }}
+          >
             <div className="flex items-start max-md:flex-col max-md:gap-4">
               <p className="font-heading font-normal text-[1.389vw] leading-[1.2] text-off-black shrink-0 w-[31.458vw] pl-[8.333vw] max-md:w-auto max-md:text-[17px] max-md:pl-0">
                 Neem contact op

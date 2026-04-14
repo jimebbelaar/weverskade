@@ -77,7 +77,7 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
   }, [positionDotAt]);
 
   return (
-    <footer className={`${bg} h-dvh flex flex-col justify-between pt-[4.028vw] pb-[3.333vw] pl-[2.639vw] pr-[2.431vw] max-md:h-auto max-md:pt-5 max-md:pb-5 max-md:px-5`}>
+    <footer className={`${bg} h-dvh flex flex-col justify-between pt-[4.028vw] pb-[3.333vw] pl-[2.639vw] pr-[2.431vw] max-md:min-h-dvh max-md:pt-5 max-md:pb-5 max-md:px-5`}>
       {/* Desktop top content columns */}
       <div className="flex max-md:hidden">
         {/* Copyright column */}

@@ -23,6 +23,17 @@ export default function ScrollHeroLineSplit({
   const sentinelRef = useRef<HTMLDivElement>(null);
   const [lines, setLines] = useState<string[] | null>(null);
   const [visible, setVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  const effectiveIndent = isMobile ? "0" : indent;
 
   const splitLines = useCallback(() => {
     const el = measureRef.current;
@@ -107,7 +118,7 @@ export default function ScrollHeroLineSplit({
       <Tag
         ref={measureRef as any}
         className={className}
-        style={{ visibility: "hidden", textIndent: indent }}
+        style={{ visibility: "hidden", textIndent: effectiveIndent }}
       >
         {text}
       </Tag>
@@ -126,7 +137,7 @@ export default function ScrollHeroLineSplit({
                 transition: visible
                   ? `transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay + i * stagger}s`
                   : "none",
-                ...(i === 0 ? { paddingLeft: indent } : {}),
+                ...(i === 0 ? { paddingLeft: effectiveIndent } : {}),
               }}
             >
               {line}
