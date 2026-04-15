@@ -20,6 +20,7 @@ export default function PageTransition({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const isStudio = pathname?.startsWith("/studio");
   const [phase, setPhase] = useState<Phase>("idle");
   const [snapshot, setSnapshot] = useState<{
     html: string;
@@ -92,6 +93,8 @@ export default function PageTransition({
   const easing = "cubic-bezier(0.7, 0.05, 0.13, 1)";
   const dur = "1s";
   const active = phase !== "idle" && snapshot;
+
+  if (isStudio) return <>{children}</>;
 
   // Single return — children always at the same tree position so React
   // never unmounts/remounts them across phase changes.

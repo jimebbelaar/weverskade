@@ -30,6 +30,7 @@ function detectTheme(): NavTheme {
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
+  const isStudio = pathname?.startsWith("/studio");
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const navigate = usePageNavigation();
@@ -149,6 +150,8 @@ export default function Navbar() {
   const isVisible = navVisible || menuOpen;
   const { bg, text } = themes[theme];
   const activeText = menuOpen ? "#F7F5F0" : text;
+
+  if (isStudio) return null;
 
   return (
     <>
