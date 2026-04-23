@@ -233,8 +233,10 @@ export default function Menu({ isOpen, onClose }: MenuProps) {
           >
             Home
           </a>
-          <span
-            className="absolute right-[1.458vw] bottom-[1.944vw] font-body font-medium text-[0.694vw] leading-normal tracking-[-0.04em] text-off-white max-md:right-5 max-md:bottom-8 max-md:text-[11px]"
+          <a
+            href="/privacybeleid"
+            onClick={(e) => handleNavigation(e, "/privacybeleid")}
+            className="absolute right-[1.458vw] bottom-[1.944vw] font-body font-medium text-[0.694vw] leading-normal tracking-[-0.04em] text-off-white no-underline hover:opacity-70 transition-opacity duration-200 max-md:right-5 max-md:bottom-8 max-md:text-[11px]"
             style={{
               opacity: visible ? 1 : 0,
               transition: visible
@@ -243,7 +245,7 @@ export default function Menu({ isOpen, onClose }: MenuProps) {
             }}
           >
             Privacy Policy
-          </span>
+          </a>
         </div>
       </div>
     </div>
