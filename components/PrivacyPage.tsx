@@ -54,7 +54,9 @@ export default function PrivacyPage() {
 
       {/* Body */}
       <div className="px-[2.431vw] mt-[6.25vw] pb-[16.875vw] max-md:px-5 max-md:mt-10 max-md:pb-20">
-        <div className="max-w-[58.333vw] max-md:max-w-none ml-[2.431vw] max-md:ml-0">
+        {/* Content column: left edge aligns with the H1 above. Capped width on
+            desktop for readability, full-width on mobile. */}
+        <div className="max-w-[58.333vw] max-md:max-w-none">
           {/* Intro paragraph — animated line-by-line */}
           <LineSplit
             animate={animate}
