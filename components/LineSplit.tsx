@@ -15,11 +15,10 @@ interface LineSplitProps {
 }
 
 /**
- * Splits a block of text into its visually-rendered lines and animates
- * each line with a mask-slide reveal (translateY from below).
- *
- * Works by measuring actual line breaks in the DOM using Range/getClientRects,
- * then re-rendering as individually-wrapped lines.
+ * Splits a block of text into its visually-rendered lines and animates each
+ * line with a mask-slide reveal. See ScrollHeroLineSplit for the design notes
+ * on the two-element overlay pattern that prevents the intrinsic-width
+ * feedback loop and the font-swap reflow.
  */
 export default function LineSplit({
   children,
@@ -29,19 +28,18 @@ export default function LineSplit({
   duration = 0.9,
   className = "",
 }: LineSplitProps) {
-  const measureRef = useRef<HTMLParagraphElement>(null);
+  const layoutRef = useRef<HTMLParagraphElement>(null);
   const [lines, setLines] = useState<string[] | null>(null);
 
   const splitLines = useCallback(() => {
-    const el = measureRef.current;
+    const el = layoutRef.current;
     if (!el) return;
 
-    const text = el.textContent || "";
-    if (!text.trim()) return;
-
-    // Use a Range across the entire text node to detect line breaks
     const textNode = el.firstChild;
     if (!textNode || textNode.nodeType !== Node.TEXT_NODE) return;
+
+    const text = textNode.textContent || "";
+    if (!text.trim()) return;
 
     const range = document.createRange();
     const lineArray: string[] = [];
@@ -55,10 +53,8 @@ export default function LineSplit({
       const top = Math.round(rect.top);
 
       if (lastTop !== -1 && top !== lastTop && i > lineStart) {
-        // New line detected — capture previous line
         lineArray.push(text.slice(lineStart, i).trimEnd());
         lineStart = i;
-        // skip leading spaces on the new line
         while (lineStart < text.length && text[lineStart] === " ") {
           lineStart++;
           i = lineStart;
@@ -67,57 +63,103 @@ export default function LineSplit({
       lastTop = top;
     }
 
-    // Push the final line
     const lastLine = text.slice(lineStart).trimEnd();
     if (lastLine) lineArray.push(lastLine);
 
-    setLines(lineArray);
+    setLines((prev) => {
+      if (prev && prev.length === lineArray.length && prev.every((l, i) => l === lineArray[i])) {
+        return prev;
+      }
+      return lineArray;
+    });
   }, []);
 
   useEffect(() => {
-    splitLines();
+    let cancelled = false;
+    let lastWidth = 0;
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
-    // Re-split on resize
-    const onResize = () => {
-      setLines(null); // go back to unsplit to re-measure
+    const scheduleMeasure = () => {
+      if (cancelled) return;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (cancelled) return;
+          splitLines();
+        });
+      });
     };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+
+    const fontsReady =
+      typeof document !== "undefined" && document.fonts
+        ? document.fonts.ready
+        : Promise.resolve();
+
+    fontsReady.then(() => {
+      if (cancelled) return;
+      lastWidth = layoutRef.current?.getBoundingClientRect().width ?? 0;
+      scheduleMeasure();
+    });
+
+    const ro = new ResizeObserver((entries) => {
+      const w = entries[0]?.contentRect.width ?? 0;
+      if (Math.abs(w - lastWidth) < 0.5) return;
+      lastWidth = w;
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        scheduleMeasure();
+      }, 200);
+    });
+    if (layoutRef.current) ro.observe(layoutRef.current);
+
+    const onLoadingDone = () => scheduleMeasure();
+    if (typeof document !== "undefined" && document.fonts) {
+      document.fonts.addEventListener?.("loadingdone", onLoadingDone);
+    }
+
+    return () => {
+      cancelled = true;
+      if (debounceTimer) clearTimeout(debounceTimer);
+      ro.disconnect();
+      if (typeof document !== "undefined" && document.fonts) {
+        document.fonts.removeEventListener?.("loadingdone", onLoadingDone);
+      }
+    };
   }, [splitLines]);
 
-  // After lines reset to null, re-measure on next frame
-  useEffect(() => {
-    if (lines === null) {
-      requestAnimationFrame(() => splitLines());
-    }
-  }, [lines, splitLines]);
-
-  // Before lines are measured, render invisible text for measurement
-  if (lines === null) {
-    return (
-      <p ref={measureRef} className={className} style={{ visibility: "hidden" }}>
+  return (
+    <div className="relative">
+      {/* Layout element: always present, invisible. Holds the original text so
+          parent intrinsic sizing is stable. Also the measurement target. */}
+      <p
+        ref={layoutRef}
+        className={className}
+        aria-hidden="true"
+        style={{ visibility: "hidden" }}
+      >
         {children}
       </p>
-    );
-  }
 
-  return (
-    <p className={className} aria-label={children}>
-      {lines.map((line, i) => (
-        <span key={i} className="block overflow-hidden pb-[0.1em] -mb-[0.1em]">
-          <span
-            className="block will-change-transform"
-            style={{
-              transform: animate ? "translateY(0)" : "translateY(110%)",
-              transition: animate
-                ? `transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay + i * stagger}s`
-                : "none",
-            }}
-          >
-            {line}
-          </span>
-        </span>
-      ))}
-    </p>
+      {/* Split overlay: absolutely positioned, out of flow. */}
+      {lines !== null && (
+        <p className={`${className} absolute inset-0`} aria-label={children}>
+          {lines.map((line, i) => (
+            <span key={i} className="block overflow-hidden pb-[0.1em] -mb-[0.1em]">
+              <span
+                className="block will-change-transform"
+                style={{
+                  whiteSpace: "nowrap",
+                  transform: animate ? "translateY(0)" : "translateY(110%)",
+                  transition: animate
+                    ? `transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay + i * stagger}s`
+                    : "none",
+                }}
+              >
+                {line}
+              </span>
+            </span>
+          ))}
+        </p>
+      )}
+    </div>
   );
 }

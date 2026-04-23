@@ -2,6 +2,31 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 
+/**
+ * Splits text into its visually-rendered lines and animates each line with a
+ * mask-slide reveal. Bulletproof against the two failure modes that plagued
+ * the previous implementation:
+ *
+ * 1. **Font-swap drift** — measurement defers to `document.fonts.ready` and
+ *    re-measures on the `loadingdone` event so we never measure with fallback
+ *    metrics.
+ *
+ * 2. **Intrinsic-width feedback loop** — the previous implementation reused
+ *    one `<p>` for measurement and rendering. After the split, that `<p>`'s
+ *    intrinsic max-content shrank (each line is `nowrap` and shorter than the
+ *    full text). When the parent was a flex item with `align-items: flex-start`
+ *    it shrank to that smaller width, which fired ResizeObserver, which
+ *    re-measured at the new width, which produced different lines, which…
+ *    infinite flicker.
+ *
+ *    Fix: render TWO elements — a permanently-present, invisible "layout"
+ *    element holding the original text (its max-content never changes) and a
+ *    `position: absolute` overlay holding the animated split lines (out of
+ *    flow, so it cannot influence parent sizing).
+ *
+ * Plus: 200ms debounced resize (GSAP SplitText's number) and `nowrap` on
+ * every rendered line as a last-resort guarantee.
+ */
 export default function ScrollHeroLineSplit({
   text,
   indent = "0",
@@ -19,7 +44,7 @@ export default function ScrollHeroLineSplit({
   className?: string;
   tag?: "h1" | "h2" | "h3" | "p";
 }) {
-  const measureRef = useRef<HTMLElement>(null);
+  const layoutRef = useRef<HTMLElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const [lines, setLines] = useState<string[] | null>(null);
   const [visible, setVisible] = useState(false);
@@ -36,30 +61,31 @@ export default function ScrollHeroLineSplit({
   const effectiveIndent = isMobile ? "0" : indent;
 
   const splitLines = useCallback(() => {
-    const el = measureRef.current;
+    const el = layoutRef.current;
     if (!el) return;
 
-    const content = el.textContent || "";
-    if (!content.trim()) return;
-
+    // Find the text node (the layout element contains exactly the original text)
     const textNode = el.firstChild;
     if (!textNode || textNode.nodeType !== Node.TEXT_NODE) return;
+
+    const text = textNode.textContent || "";
+    if (!text.trim()) return;
 
     const range = document.createRange();
     const lineArray: string[] = [];
     let lastTop = -1;
     let lineStart = 0;
 
-    for (let i = 0; i <= content.length; i++) {
-      range.setStart(textNode, i === content.length ? Math.max(0, i - 1) : i);
-      range.setEnd(textNode, i === content.length ? i : i + 1);
+    for (let i = 0; i <= text.length; i++) {
+      range.setStart(textNode, i === text.length ? Math.max(0, i - 1) : i);
+      range.setEnd(textNode, i === text.length ? i : i + 1);
       const rect = range.getBoundingClientRect();
       const top = Math.round(rect.top);
 
       if (lastTop !== -1 && top !== lastTop && i > lineStart) {
-        lineArray.push(content.slice(lineStart, i).trimEnd());
+        lineArray.push(text.slice(lineStart, i).trimEnd());
         lineStart = i;
-        while (lineStart < content.length && content[lineStart] === " ") {
+        while (lineStart < text.length && text[lineStart] === " ") {
           lineStart++;
           i = lineStart;
         }
@@ -67,24 +93,76 @@ export default function ScrollHeroLineSplit({
       lastTop = top;
     }
 
-    const lastLine = content.slice(lineStart).trimEnd();
+    const lastLine = text.slice(lineStart).trimEnd();
     if (lastLine) lineArray.push(lastLine);
 
-    setLines(lineArray);
+    setLines((prev) => {
+      if (prev && prev.length === lineArray.length && prev.every((l, i) => l === lineArray[i])) {
+        return prev;
+      }
+      return lineArray;
+    });
   }, []);
 
   useEffect(() => {
-    splitLines();
-    const onResize = () => setLines(null);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    let cancelled = false;
+    let lastWidth = 0;
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const scheduleMeasure = () => {
+      if (cancelled) return;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (cancelled) return;
+          splitLines();
+        });
+      });
+    };
+
+    const fontsReady =
+      typeof document !== "undefined" && document.fonts
+        ? document.fonts.ready
+        : Promise.resolve();
+
+    fontsReady.then(() => {
+      if (cancelled) return;
+      lastWidth = layoutRef.current?.getBoundingClientRect().width ?? 0;
+      scheduleMeasure();
+    });
+
+    const ro = new ResizeObserver((entries) => {
+      const w = entries[0]?.contentRect.width ?? 0;
+      if (Math.abs(w - lastWidth) < 0.5) return;
+      lastWidth = w;
+      // Debounce — borrowed from GSAP SplitText's autoSplit. Width changes
+      // during scroll/orientation/animation can fire many entries; we only
+      // care about the settled state.
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        scheduleMeasure();
+      }, 200);
+    });
+    if (layoutRef.current) ro.observe(layoutRef.current);
+
+    const onLoadingDone = () => scheduleMeasure();
+    if (typeof document !== "undefined" && document.fonts) {
+      document.fonts.addEventListener?.("loadingdone", onLoadingDone);
+    }
+
+    return () => {
+      cancelled = true;
+      if (debounceTimer) clearTimeout(debounceTimer);
+      ro.disconnect();
+      if (typeof document !== "undefined" && document.fonts) {
+        document.fonts.removeEventListener?.("loadingdone", onLoadingDone);
+      }
+    };
   }, [splitLines]);
 
+  // Re-measure when indent flips (mobile/desktop boundary)
   useEffect(() => {
-    if (lines === null) {
-      requestAnimationFrame(() => splitLines());
-    }
-  }, [lines, splitLines]);
+    requestAnimationFrame(() => splitLines());
+  }, [effectiveIndent, splitLines]);
 
   // Intersection observer for scroll-triggered reveal
   useEffect(() => {
@@ -113,38 +191,49 @@ export default function ScrollHeroLineSplit({
     };
   }, [lines]);
 
-  if (lines === null) {
-    return (
+  return (
+    <div ref={sentinelRef} className="relative">
+      {/* Layout element: always in flow, always invisible. Holds the original
+          text so the parent's intrinsic size is stable across split/unsplit
+          renders. Also serves as the measurement target. */}
       <Tag
-        ref={measureRef as any}
+        ref={layoutRef as any}
         className={className}
-        style={{ visibility: "hidden", textIndent: effectiveIndent }}
+        aria-hidden="true"
+        style={{
+          visibility: "hidden",
+          textIndent: effectiveIndent,
+        }}
       >
         {text}
       </Tag>
-    );
-  }
 
-  return (
-    <div ref={sentinelRef}>
-      <Tag className={className} aria-label={text.trim()}>
-        {lines.map((line, i) => (
-          <span key={i} className="block overflow-hidden pb-[0.1em] -mb-[0.1em]">
-            <span
-              className="block will-change-transform"
-              style={{
-                transform: visible ? "translateY(0)" : "translateY(110%)",
-                transition: visible
-                  ? `transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay + i * stagger}s`
-                  : "none",
-                ...(i === 0 ? { paddingLeft: effectiveIndent } : {}),
-              }}
-            >
-              {line}
+      {/* Split overlay: absolutely positioned, out of flow — cannot influence
+          parent intrinsic width, so no feedback loop. */}
+      {lines !== null && (
+        <Tag
+          className={`${className} absolute inset-0`}
+          aria-label={text.trim()}
+        >
+          {lines.map((line, i) => (
+            <span key={i} className="block overflow-hidden pb-[0.1em] -mb-[0.1em]">
+              <span
+                className="block will-change-transform"
+                style={{
+                  whiteSpace: "nowrap",
+                  transform: visible ? "translateY(0)" : "translateY(110%)",
+                  transition: visible
+                    ? `transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay + i * stagger}s`
+                    : "none",
+                  ...(i === 0 ? { paddingLeft: effectiveIndent } : {}),
+                }}
+              >
+                {line}
+              </span>
             </span>
-          </span>
-        ))}
-      </Tag>
+          ))}
+        </Tag>
+      )}
     </div>
   );
 }

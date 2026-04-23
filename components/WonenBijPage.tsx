@@ -315,15 +315,15 @@ export default function WonenBijPage({ data }: { data?: WonenBijPageData } = {})
                 transition: "grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
             >
-              <div className="overflow-hidden">
-                <div className="flex flex-wrap gap-x-[0.556vw] gap-y-[1.389vw] max-md:gap-x-3 max-md:gap-y-2">
+              <div className="overflow-hidden pb-[2vw] -mb-[2vw] max-md:pb-[16px] max-md:-mb-[16px]">
+                <div className="flex flex-wrap gap-x-[0.444vw] gap-y-[1.111vw] max-md:gap-x-[10px] max-md:gap-y-[6px]">
                   {typeOptions.map((opt, i) => (
-                    <span key={opt.label} className="overflow-hidden block py-[0.4vw] -my-[0.4vw] max-md:py-[2px] max-md:-my-[2px]">
+                    <span key={opt.label} className="overflow-hidden block pt-[0.4vw] pb-[2vw] -mt-[0.4vw] -mb-[2vw] max-md:pt-[2px] max-md:pb-[16px] max-md:-mt-[2px] max-md:-mb-[16px]">
                       <button
                         onClick={() => setActiveType(opt.label)}
                         className="font-heading font-normal tracking-[-0.056vw] text-off-black cursor-pointer bg-transparent border-none p-0 text-left will-change-transform"
                         style={{
-                          transform: typeOpen ? "translateY(0)" : "translateY(110%)",
+                          transform: typeOpen ? "translateY(0)" : "translateY(200%)",
                           transition: typeOpen
                             ? `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${0.05 + i * 0.08}s`
                             : "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
@@ -376,15 +376,15 @@ export default function WonenBijPage({ data }: { data?: WonenBijPageData } = {})
                 transition: "grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
             >
-              <div className="overflow-hidden">
-                <div className="flex flex-wrap gap-x-[0.556vw] gap-y-[1.389vw] max-md:gap-x-3 max-md:gap-y-2">
+              <div className="overflow-hidden pb-[2vw] -mb-[2vw] max-md:pb-[16px] max-md:-mb-[16px]">
+                <div className="flex flex-wrap gap-x-[0.444vw] gap-y-[1.111vw] max-md:gap-x-[10px] max-md:gap-y-[6px]">
                   {locationOptions.map((opt, i) => (
-                    <span key={opt.label} className="overflow-hidden block py-[0.4vw] -my-[0.4vw] max-md:py-[2px] max-md:-my-[2px]">
+                    <span key={opt.label} className="overflow-hidden block pt-[0.4vw] pb-[2vw] -mt-[0.4vw] -mb-[2vw] max-md:pt-[2px] max-md:pb-[16px] max-md:-mt-[2px] max-md:-mb-[16px]">
                       <button
                         onClick={() => setActiveLocation(opt.label)}
                         className="font-heading font-normal tracking-[-0.056vw] text-off-black cursor-pointer bg-transparent border-none p-0 text-left will-change-transform"
                         style={{
-                          transform: locationOpen ? "translateY(0)" : "translateY(110%)",
+                          transform: locationOpen ? "translateY(0)" : "translateY(200%)",
                           transition: locationOpen
                             ? `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${0.05 + i * 0.08}s`
                             : "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",

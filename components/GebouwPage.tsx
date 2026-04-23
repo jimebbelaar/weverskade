@@ -5,41 +5,12 @@ import Image from "next/image";
 import LineSplit from "@/components/LineSplit";
 import CTASection from "@/components/CTASection";
 import GebouwMap from "@/components/GebouwMap";
+import VimeoBackground from "@/components/VimeoBackground";
+import GebouwImageCarousel from "@/components/GebouwImageCarousel";
 import type { GebouwProject } from "@/data/gebouwen";
 
 interface GebouwPageProps {
   project: GebouwProject;
-}
-
-function parseVimeoUrl(url: string): { id: string; hash?: string } | null {
-  const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)(?:\/([a-zA-Z0-9]+))?/);
-  if (!match) return null;
-  return { id: match[1], hash: match[2] };
-}
-
-function VimeoBackground({ url }: { url: string }) {
-  const parsed = parseVimeoUrl(url);
-  if (!parsed) return null;
-  const params = new URLSearchParams({
-    background: "1",
-    autoplay: "1",
-    loop: "1",
-    muted: "1",
-    autopause: "0",
-  });
-  if (parsed.hash) params.set("h", parsed.hash);
-  const src = `https://player.vimeo.com/video/${parsed.id}?${params.toString()}`;
-  return (
-    <div className="absolute inset-0 pointer-events-none">
-      <iframe
-        src={src}
-        title="Hero video"
-        allow="autoplay; fullscreen; picture-in-picture"
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[177.78vh] h-[56.25vw] min-w-full min-h-full"
-        frameBorder={0}
-      />
-    </div>
-  );
 }
 
 /* ─── Detail line mask-slide helper ─── */
@@ -424,7 +395,7 @@ export default function GebouwPage({ project }: GebouwPageProps) {
           }}
         >
           {project.heroVideoUrl ? (
-            <VimeoBackground url={project.heroVideoUrl} />
+            <VimeoBackground url={project.heroVideoUrl} poster={project.heroImage} />
           ) : (
             <Image
               ref={heroImgRef}
@@ -479,29 +450,35 @@ export default function GebouwPage({ project }: GebouwPageProps) {
         </div>
       </div>
 
-      {/* ─── Two side-by-side images ─── */}
-      <div className="px-[2.431vw] mt-[1.389vw] flex gap-[1.389vw] max-md:px-5 max-md:mt-3 max-md:flex-col max-md:gap-3">
-        <div className="relative flex-1 h-[31.111vw] overflow-hidden max-md:h-[60vw]">
-          <Image
-            src={project.smallImages[0]}
-            alt={`${project.name} detail 1`}
-            fill
-            sizes="(max-width: 768px) 100vw, 47vw"
-            className="object-cover"
-            quality={100}
-          />
+      {/* ─── Image gallery ───
+          Exactly 2 images → keep the original two-column layout (stacks on mobile).
+          3 or more       → switch to a horizontal scroll-snap carousel. */}
+      {project.smallImages.length === 2 ? (
+        <div className="px-[2.431vw] mt-[1.389vw] flex gap-[1.389vw] max-md:px-5 max-md:mt-3 max-md:flex-col max-md:gap-3">
+          <div className="relative flex-1 h-[31.111vw] overflow-hidden max-md:h-[60vw]">
+            <Image
+              src={project.smallImages[0]}
+              alt={`${project.name} detail 1`}
+              fill
+              sizes="(max-width: 768px) 100vw, 47vw"
+              className="object-cover"
+              quality={100}
+            />
+          </div>
+          <div className="relative flex-1 h-[31.042vw] overflow-hidden max-md:h-[60vw]">
+            <Image
+              src={project.smallImages[1]}
+              alt={`${project.name} detail 2`}
+              fill
+              sizes="(max-width: 768px) 100vw, 47vw"
+              className="object-cover"
+              quality={100}
+            />
+          </div>
         </div>
-        <div className="relative flex-1 h-[31.042vw] overflow-hidden max-md:h-[60vw]">
-          <Image
-            src={project.smallImages[1]}
-            alt={`${project.name} detail 2`}
-            fill
-            sizes="(max-width: 768px) 100vw, 47vw"
-            className="object-cover"
-            quality={100}
-          />
-        </div>
-      </div>
+      ) : project.smallImages.length > 2 ? (
+        <GebouwImageCarousel images={project.smallImages} projectName={project.name} />
+      ) : null}
 
       {/* ─── Google Map ─── */}
       <div className="px-[2.431vw] mt-[4.167vw] max-md:px-5 max-md:mt-6">

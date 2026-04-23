@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
 import CTASection from "@/components/CTASection";
 import LineSplit from "@/components/LineSplit";
+import VimeoBackground from "@/components/VimeoBackground";
 import { usePageNavigation } from "@/hooks/usePageNavigation";
 
 
@@ -21,6 +22,7 @@ interface PortfolioPageData {
   heroLabel?: string;
   heroTitle?: string;
   heroImages?: string[];
+  heroVideoUrl?: string;
   ctaLabel?: string;
   ctaHeading?: string;
   ctaLinkText?: string;
@@ -153,7 +155,8 @@ const defaultProjects: PortfolioProject[] = [
 
 export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {}) {
   const projects = data?.projects ?? defaultProjects;
-  // Hero slideshow: hero image first, then all unique project images
+  const heroVideoUrl = data?.heroVideoUrl ?? "https://vimeo.com/1184821093";
+  // Hero slideshow (fallback when no video URL): hero image first, then all unique project images
   const heroSlides = data?.heroImages ?? [
     "/images/portfolio-hero.webp",
     ...defaultProjects
@@ -192,9 +195,9 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
     };
   }, []);
 
-  // Start hero slideshow after entrance animation completes
+  // Start hero slideshow after entrance animation completes (only if no video)
   useEffect(() => {
-    if (!animate) return;
+    if (!animate || heroVideoUrl) return;
     // Wait for clip-path reveal to finish (~1.2s) before starting cycle
     const startDelay = setTimeout(() => {
       intervalRef.current = setInterval(() => {
@@ -205,7 +208,7 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
       clearTimeout(startDelay);
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [animate]);
+  }, [animate, heroVideoUrl]);
 
   const typeOptions = useMemo(() => {
     const types = [...new Set(projects.map((p) => p.type))];
@@ -284,24 +287,38 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
                 : "none",
             }}
           >
-            {heroSlides.map((src, i) => (
-              <Image
-                key={src}
-                src={src}
-                alt="Portefeuille overzicht"
-                fill
-                sizes="(max-width: 768px) 100vw, 46.875vw"
-                className="object-cover will-change-transform"
+            {heroVideoUrl ? (
+              <div
+                className="absolute inset-0 will-change-transform"
                 style={{
-                  opacity: slideIndex === i ? 1 : 0,
                   transform: animate ? "scale(1)" : "scale(1.2)",
                   transition: animate
                     ? `transform 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.05s`
                     : "none",
                 }}
-                priority={i === 0}
-              />
-            ))}
+              >
+                <VimeoBackground url={heroVideoUrl} poster={heroSlides[0]} />
+              </div>
+            ) : (
+              heroSlides.map((src, i) => (
+                <Image
+                  key={src}
+                  src={src}
+                  alt="Portefeuille overzicht"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 46.875vw"
+                  className="object-cover will-change-transform"
+                  style={{
+                    opacity: slideIndex === i ? 1 : 0,
+                    transform: animate ? "scale(1)" : "scale(1.2)",
+                    transition: animate
+                      ? `transform 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.05s`
+                      : "none",
+                  }}
+                  priority={i === 0}
+                />
+              ))
+            )}
           </div>
           {/* ── Caption mask-slide ── */}
           <span className="block overflow-hidden">
@@ -350,15 +367,15 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
                 transition: "grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
             >
-              <div className="overflow-hidden">
-                <div className="flex flex-wrap gap-x-[0.556vw] gap-y-[1.389vw] max-md:gap-x-3 max-md:gap-y-2">
+              <div className="overflow-hidden pb-[2vw] -mb-[2vw] max-md:pb-[16px] max-md:-mb-[16px]">
+                <div className="flex flex-wrap gap-x-[0.444vw] gap-y-[1.111vw] max-md:gap-x-[10px] max-md:gap-y-[6px]">
                   {typeOptions.map((opt, i) => (
-                    <span key={opt.label} className="overflow-hidden block py-[0.4vw] -my-[0.4vw] max-md:py-[2px] max-md:-my-[2px]">
+                    <span key={opt.label} className="overflow-hidden block pt-[0.4vw] pb-[2vw] -mt-[0.4vw] -mb-[2vw] max-md:pt-[2px] max-md:pb-[16px] max-md:-mt-[2px] max-md:-mb-[16px]">
                       <button
                         onClick={() => setActiveType(opt.label)}
                         className="font-heading font-normal tracking-[-0.056vw] text-off-black cursor-pointer bg-transparent border-none p-0 text-left will-change-transform"
                         style={{
-                          transform: typeOpen ? "translateY(0)" : "translateY(110%)",
+                          transform: typeOpen ? "translateY(0)" : "translateY(200%)",
                           transition: typeOpen
                             ? `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${0.05 + i * 0.08}s`
                             : "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
@@ -411,15 +428,15 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
                 transition: "grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
             >
-              <div className="overflow-hidden">
-                <div className="flex flex-wrap gap-x-[0.556vw] gap-y-[1.389vw] max-md:gap-x-3 max-md:gap-y-2">
+              <div className="overflow-hidden pb-[2vw] -mb-[2vw] max-md:pb-[16px] max-md:-mb-[16px]">
+                <div className="flex flex-wrap gap-x-[0.444vw] gap-y-[1.111vw] max-md:gap-x-[10px] max-md:gap-y-[6px]">
                   {locationOptions.map((opt, i) => (
-                    <span key={opt.label} className="overflow-hidden block py-[0.4vw] -my-[0.4vw] max-md:py-[2px] max-md:-my-[2px]">
+                    <span key={opt.label} className="overflow-hidden block pt-[0.4vw] pb-[2vw] -mt-[0.4vw] -mb-[2vw] max-md:pt-[2px] max-md:pb-[16px] max-md:-mt-[2px] max-md:-mb-[16px]">
                       <button
                         onClick={() => setActiveLocation(opt.label)}
                         className="font-heading font-normal tracking-[-0.056vw] text-off-black cursor-pointer bg-transparent border-none p-0 text-left will-change-transform"
                         style={{
-                          transform: locationOpen ? "translateY(0)" : "translateY(110%)",
+                          transform: locationOpen ? "translateY(0)" : "translateY(200%)",
                           transition: locationOpen
                             ? `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${0.05 + i * 0.08}s`
                             : "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",

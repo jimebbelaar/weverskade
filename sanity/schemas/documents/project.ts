@@ -147,10 +147,12 @@ export const project = defineType({
     }),
     defineField({
       name: 'smallImages',
-      title: 'Kleine afbeeldingen',
+      title: 'Kleine afbeeldingen (galerij)',
+      description:
+        'Voeg minimaal 2 afbeeldingen toe. Bij precies 2 worden ze naast elkaar getoond. Bij 3 of meer wordt het automatisch een horizontaal scrollbare galerij.',
       type: 'array',
       of: [{ type: 'image', options: { hotspot: true } }],
-      validation: (rule) => rule.max(2),
+      validation: (rule) => rule.min(2),
     }),
     defineField({
       name: 'descriptionLeft',

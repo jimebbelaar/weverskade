@@ -15,7 +15,8 @@ export interface GebouwProject {
   heroImage: string;
   heroVideoUrl?: string;
   fullWidthImage: string;
-  smallImages: [string, string];
+  /** Minimaal 2 afbeeldingen. Bij 3 of meer wordt de UI een horizontaal scrollbare galerij. */
+  smallImages: string[];
   descriptionLeft: string;
   descriptionRight: string;
   quote?: string;
