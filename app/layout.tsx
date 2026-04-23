@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
+import { sanityFetch } from "@/sanity/lib/fetch";
+import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 import "./globals.css";
 
 const arizonaMix = localFont({
@@ -44,11 +46,19 @@ const gtStandard = localFont({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Weverskade | Aandacht voor ruimte",
-  description:
-    "Weverskade is een ontwikkelende belegger in woningen en commercieel vastgoed.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await sanityFetch<{
+    metaTitle?: string;
+    metaDescription?: string;
+  }>({ query: SITE_SETTINGS_QUERY, tags: ["siteSettings"] });
+
+  return {
+    title: settings?.metaTitle ?? "Weverskade | Aandacht voor ruimte",
+    description:
+      settings?.metaDescription ??
+      "Weverskade is een ontwikkelende belegger in woningen en commercieel vastgoed.",
+  };
+}
 
 export default function RootLayout({
   children,

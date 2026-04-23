@@ -27,6 +27,7 @@ export default async function Portefeuille() {
       ? {
           heroLabel: pageData?.heroLabel,
           heroTitle: pageData?.heroTitle,
+          heroVideoUrl: pageData?.heroVideoUrl,
           heroImages: pageData?.heroImages?.map((img: any) =>
             sanityImageUrl(img, "/images/portfolio-hero.webp")
           ),
