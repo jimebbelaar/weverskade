@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
@@ -57,8 +57,21 @@ export async function generateMetadata(): Promise<Metadata> {
     description:
       settings?.metaDescription ??
       "Weverskade is een ontwikkelende belegger in woningen en commercieel vastgoed.",
+    // Next.js will also auto-emit links for app/icon.svg and app/apple-icon
+    // thanks to filename conventions — listing them here makes the intent
+    // explicit and ensures the SVG is preferred on modern browsers.
+    icons: {
+      icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+      apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
+    },
   };
 }
+
+// Brand theme color — paints mobile browser chrome (iOS Safari top bar /
+// Android address bar / PWA splash) in the same green as the logo tile.
+export const viewport: Viewport = {
+  themeColor: "#848F71",
+};
 
 export default function RootLayout({
   children,
