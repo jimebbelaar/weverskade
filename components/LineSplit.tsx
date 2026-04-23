@@ -30,6 +30,15 @@ export default function LineSplit({
 }: LineSplitProps) {
   const layoutRef = useRef<HTMLParagraphElement>(null);
   const [lines, setLines] = useState<string[] | null>(null);
+  /**
+   * Gate the `animate` transition behind one paint of the initial
+   * `translateY(110%)` state. Without this, if `animate` is already true by
+   * the time the overlay mounts (common on a cold load when
+   * `document.fonts.ready` resolves after the page transition finishes),
+   * the overlay's very first render jumps straight to `translateY(0)` with
+   * no transition — the animation is "missed" and the text just appears.
+   */
+  const [overlayPrimed, setOverlayPrimed] = useState(false);
 
   const splitLines = useCallback(() => {
     const el = layoutRef.current;
@@ -126,6 +135,24 @@ export default function LineSplit({
     };
   }, [splitLines]);
 
+  // After the overlay mounts, paint one frame at translateY(110%) then flip
+  // `overlayPrimed` so the transition from 110% → 0% actually animates, even
+  // if `animate` was already true at mount time.
+  useEffect(() => {
+    if (lines === null) return;
+    let raf1 = 0;
+    let raf2 = 0;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => setOverlayPrimed(true));
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
+  }, [lines]);
+
+  const play = animate && overlayPrimed;
+
   return (
     <div className="relative">
       {/* Layout element: always present, invisible. Holds the original text so
@@ -148,8 +175,8 @@ export default function LineSplit({
                 className="block will-change-transform"
                 style={{
                   whiteSpace: "nowrap",
-                  transform: animate ? "translateY(0)" : "translateY(110%)",
-                  transition: animate
+                  transform: play ? "translateY(0)" : "translateY(110%)",
+                  transition: play
                     ? `transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay + i * stagger}s`
                     : "none",
                 }}

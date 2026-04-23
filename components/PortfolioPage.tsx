@@ -321,9 +321,9 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
             )}
           </div>
           {/* ── Caption mask-slide ── */}
-          <span className="block overflow-hidden">
+          <span className="block overflow-hidden pb-[0.4vw] -mb-[0.4vw] max-md:pb-[4px] max-md:-mb-[4px]">
             <p
-              className="font-body font-medium text-[1.597vw] leading-[2.153vw] tracking-[-0.032vw] text-off-black mt-[1.25vw] will-change-transform max-md:text-[15px] max-md:mt-2"
+              className="font-body font-medium text-[1.597vw] leading-[2.153vw] tracking-[-0.032vw] text-off-black mt-[1.25vw] will-change-transform max-md:text-[15px] max-md:leading-[22px] max-md:mt-2"
               style={{
                 transform: animate ? "translateY(0)" : "translateY(110%)",
                 transition: animate

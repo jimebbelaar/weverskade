@@ -49,6 +49,13 @@ export default function ScrollHeroLineSplit({
   const [lines, setLines] = useState<string[] | null>(null);
   const [visible, setVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  /**
+   * Gate the transition behind one paint of the initial `translateY(110%)`.
+   * Prevents the animation from being "missed" if `visible` flips to true
+   * before the overlay has mounted (can happen on cold load when fonts.ready
+   * resolves after the intersection trigger has already fired).
+   */
+  const [overlayPrimed, setOverlayPrimed] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -191,6 +198,24 @@ export default function ScrollHeroLineSplit({
     };
   }, [lines]);
 
+  // Prime the overlay: render once at translateY(110%) then flip on the
+  // next frame so the transition always plays, even on cold loads where
+  // `visible` may already be true when lines finish computing.
+  useEffect(() => {
+    if (lines === null) return;
+    let raf1 = 0;
+    let raf2 = 0;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => setOverlayPrimed(true));
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
+  }, [lines]);
+
+  const play = visible && overlayPrimed;
+
   return (
     <div ref={sentinelRef} className="relative">
       {/* Layout element: always in flow, always invisible. Holds the original
@@ -221,8 +246,8 @@ export default function ScrollHeroLineSplit({
                 className="block will-change-transform"
                 style={{
                   whiteSpace: "nowrap",
-                  transform: visible ? "translateY(0)" : "translateY(110%)",
-                  transition: visible
+                  transform: play ? "translateY(0)" : "translateY(110%)",
+                  transition: play
                     ? `transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay + i * stagger}s`
                     : "none",
                   ...(i === 0 ? { paddingLeft: effectiveIndent } : {}),

@@ -311,20 +311,14 @@ export default function GebouwPage({ project }: GebouwPageProps) {
               {project.name}
             </h1>
           </div>
-          {/* Tagline — same grid column as details below */}
-          <div className="overflow-hidden">
-            <p
-              className="font-heading font-normal text-[4.931vw] leading-[1.1] tracking-[-0.099vw] text-off-black will-change-transform max-md:text-[36px] max-md:tracking-[-0.72px]"
-              style={{
-                transform: animate ? "translateY(0)" : "translateY(110%)",
-                transition: animate
-                  ? "transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.25s"
-                  : "none",
-              }}
-            >
-              {project.tagline}
-            </p>
-          </div>
+          {/* Tagline — line-by-line mask reveal */}
+          <LineSplit
+            animate={animate}
+            delay={0.25}
+            className="font-heading font-normal text-[4.931vw] leading-[1.1] tracking-[-0.099vw] text-off-black max-md:text-[36px] max-md:tracking-[-0.72px]"
+          >
+            {project.tagline}
+          </LineSplit>
         </div>
       </div>
 
@@ -503,34 +497,35 @@ export default function GebouwPage({ project }: GebouwPageProps) {
 
 /* ─── Quote section — blue background with scroll-triggered line animation ─── */
 function QuoteSection({ project }: { project: GebouwProject }) {
+  const hasTestimonial = Boolean(project.quote);
   return (
     <>
-      <div className="mt-[4.167vw] bg-blue py-[11.528vw] px-[2.431vw] max-md:mt-6 max-md:py-16 max-md:px-5">
-        <div className="flex flex-col items-center">
-          {project.quote && (
+      {hasTestimonial && (
+        <div className="mt-[4.167vw] bg-blue py-[11.528vw] px-[2.431vw] max-md:mt-6 max-md:py-16 max-md:px-5">
+          <div className="flex flex-col items-center">
             <QuoteLineSplit
-              text={project.quote}
+              text={project.quote!}
               className="font-heading font-normal text-[4.028vw] leading-[4.097vw] text-off-white text-center max-w-[70.139vw] max-md:text-[28px] max-md:leading-[32px] max-md:max-w-none"
             />
-          )}
-          {project.quoteAuthorImage && (
-            <div className="relative w-[14.583vw] h-[18.403vw] overflow-hidden mt-[4.167vw] max-md:w-[140px] max-md:h-[180px] max-md:mt-8">
-              <Image
-                src={project.quoteAuthorImage}
-                alt={project.quoteAuthor || ""}
-                fill
-                sizes="(max-width: 768px) 140px, 14.583vw"
-                className="object-cover"
-              />
-            </div>
-          )}
-          {project.quoteAuthor && (
-            <p className="font-heading font-normal text-[1.597vw] leading-[2.153vw] tracking-[-0.032vw] text-off-white mt-[1.528vw] max-md:text-[17px] max-md:mt-3">
-              {project.quoteAuthor}
-            </p>
-          )}
+            {project.quoteAuthorImage && (
+              <div className="relative w-[14.583vw] h-[18.403vw] overflow-hidden mt-[4.167vw] max-md:w-[140px] max-md:h-[180px] max-md:mt-8">
+                <Image
+                  src={project.quoteAuthorImage}
+                  alt={project.quoteAuthor || ""}
+                  fill
+                  sizes="(max-width: 768px) 140px, 14.583vw"
+                  className="object-cover"
+                />
+              </div>
+            )}
+            {project.quoteAuthor && (
+              <p className="font-heading font-normal text-[1.597vw] leading-[2.153vw] tracking-[-0.032vw] text-off-white mt-[1.528vw] max-md:text-[17px] max-md:mt-3">
+                {project.quoteAuthor}
+              </p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* CTA */}
       <div className="px-[2.431vw] mt-[8.125vw] pb-[16.875vw] max-md:px-5 max-md:mt-16 max-md:pb-16">
@@ -624,7 +619,7 @@ function WonenFormSection({
                   type="checkbox"
                   checked={formData.agreed}
                   onChange={(e) => setFormData((p) => ({ ...p, agreed: e.target.checked }))}
-                  className="mt-[0.208vw] w-[0.764vw] h-[0.764vw] border border-off-black appearance-none checked:bg-green checked:border-green cursor-pointer max-md:w-[14px] max-md:h-[14px] max-md:mt-0.5"
+                  className="shrink-0 mt-[0.208vw] w-[0.764vw] h-[0.764vw] border border-off-black appearance-none checked:bg-green checked:border-green cursor-pointer max-md:w-[16px] max-md:h-[16px] max-md:mt-[2px]"
                 />
                 <span className="font-body font-normal text-[0.764vw] leading-normal text-off-black max-w-[27.431vw] max-md:text-[11px] max-md:max-w-none">
                   Ik ga akkoord met de{" "}
