@@ -296,7 +296,7 @@ export default function GebouwPage({ project }: GebouwPageProps) {
     <section className="bg-off-white min-h-screen">
       {/* ─── Hero: Name + Tagline ─── */}
       <div className="pt-[25.139vw] px-[2.431vw] max-md:pt-[30vw] max-md:px-5">
-        <div className="grid grid-cols-2 max-md:grid-cols-1 max-md:gap-2">
+        <div className="grid grid-cols-2 gap-x-[2.431vw] max-md:grid-cols-1 max-md:gap-x-0 max-md:gap-y-2">
           {/* Project name — mask-slide */}
           <div className="overflow-hidden">
             <h1
