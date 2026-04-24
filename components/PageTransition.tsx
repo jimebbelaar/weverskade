@@ -8,7 +8,12 @@ type Phase = "idle" | "frozen" | "animating";
 // Shared stores for cross-component coordination
 declare global {
   interface Window {
-    __pageSnapshot?: { html: string; scrollY: number };
+    /**
+     * Snapshot of the outgoing page used during transitions. We keep a live
+     * DOM clone (not serialized HTML) so cached images don't re-decode when
+     * the old page is re-rendered behind the sliding new page.
+     */
+    __pageSnapshot?: { node: HTMLElement; scrollY: number };
     __pageTransitioning?: boolean;
     __navInitialHidden?: boolean;
   }
@@ -22,12 +27,11 @@ export default function PageTransition({
   const pathname = usePathname();
   const isStudio = pathname?.startsWith("/studio");
   const [phase, setPhase] = useState<Phase>("idle");
-  const [snapshot, setSnapshot] = useState<{
-    html: string;
-    scrollY: number;
-  } | null>(null);
+  const [hasSnapshot, setHasSnapshot] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  /** Reference to the live snapshot DOM node (attached by the nav caller). */
+  const snapshotNodeRef = useRef<HTMLElement | null>(null);
   const prevPathname = useRef(pathname);
   const rafRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -40,14 +44,17 @@ export default function PageTransition({
     cancelAnimationFrame(rafRef.current);
     if (timerRef.current) clearTimeout(timerRef.current);
 
-    // Reduced motion — instant swap
+    // Reduced motion — instant swap. If a snapshot was captured, remove it.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const stale = window.__pageSnapshot;
+      stale?.node.remove();
       window.__pageSnapshot = undefined;
       window.scrollTo(0, 0);
       return;
     }
 
-    // Read the pre-captured snapshot (set by Menu before navigation)
+    // Read the pre-captured snapshot (set by Menu/Navbar/usePageNavigation
+    // which already appended it to <body>).
     const captured = window.__pageSnapshot;
     window.__pageSnapshot = undefined;
 
@@ -57,20 +64,31 @@ export default function PageTransition({
       return;
     }
 
+    snapshotNodeRef.current = captured.node;
     document.body.style.overflow = "hidden";
     window.__pageTransitioning = true;
-    setSnapshot(captured);
+    setHasSnapshot(true);
     setPhase("frozen");
 
     window.dispatchEvent(new CustomEvent("page-transition-start"));
 
-    // Double rAF: paint frozen frame, then start animation
+    // Double rAF: paint frozen frame, then start animation.
     rafRef.current = requestAnimationFrame(() => {
       rafRef.current = requestAnimationFrame(() => {
         setPhase("animating");
 
+        // Animate the live snapshot node imperatively — it's already sitting
+        // in <body>. No React re-render, no re-mount, no re-decode of imgs.
+        const node = snapshotNodeRef.current;
+        if (node) {
+          node.style.transition = `transform ${dur} ${easing}`;
+          node.style.transform = "translateY(-25vh)";
+        }
+
         timerRef.current = setTimeout(() => {
-          setSnapshot(null);
+          snapshotNodeRef.current?.remove();
+          snapshotNodeRef.current = null;
+          setHasSnapshot(false);
           setPhase("idle");
           window.__pageTransitioning = false;
           window.scrollTo(0, 0);
@@ -86,20 +104,29 @@ export default function PageTransition({
     return () => {
       cancelAnimationFrame(rafRef.current);
       if (timerRef.current) clearTimeout(timerRef.current);
+      snapshotNodeRef.current?.remove();
       document.body.style.overflow = "";
     };
   }, []);
 
   const easing = "cubic-bezier(0.7, 0.05, 0.13, 1)";
   const dur = "1s";
-  const active = phase !== "idle" && snapshot;
+  const active = phase !== "idle" && hasSnapshot;
 
   if (isStudio) return <>{children}</>;
 
-  // Single return — children always at the same tree position so React
-  // never unmounts/remounts them across phase changes.
+  // The snapshot lives in <body> (inserted by the nav caller, animated
+  // imperatively above). React only manages the new page + the dark
+  // darkening overlay. This avoids re-mounting cloned <img>s inside a
+  // React-managed subtree, which was causing the flicker.
   return (
-    <div style={active ? { position: "fixed", inset: 0, overflow: "hidden" } : undefined}>
+    <div
+      style={
+        active
+          ? { position: "fixed", inset: 0, overflow: "hidden", zIndex: 10 }
+          : undefined
+      }
+    >
       {/* New page — always first child for stable React tree identity */}
       <div
         ref={containerRef}
@@ -129,42 +156,21 @@ export default function PageTransition({
         {children}
       </div>
 
-      {/* Old page + overlay — rendered after children, layered behind with z-index */}
+      {/* Dark darkening overlay sitting between the snapshot (in <body>) and
+          the new sliding page. */}
       {active && (
-        <>
-          <div
-            style={{
-              position: "absolute",
-              zIndex: 0,
-              top: -snapshot.scrollY,
-              left: 0,
-              right: 0,
-              transform:
-                phase === "animating"
-                  ? "translateY(-25vh)"
-                  : "translateY(0)",
-              transition:
-                phase === "animating"
-                  ? `transform ${dur} ${easing}`
-                  : "none",
-            }}
-            dangerouslySetInnerHTML={{ __html: snapshot.html }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              zIndex: 1,
-              inset: 0,
-              backgroundColor: "#1D1F1A",
-              opacity: phase === "animating" ? 0.5 : 0,
-              transition:
-                phase === "animating"
-                  ? `opacity 0.8s ${easing}`
-                  : "none",
-              pointerEvents: "none",
-            }}
-          />
-        </>
+        <div
+          style={{
+            position: "absolute",
+            zIndex: 1,
+            inset: 0,
+            backgroundColor: "#1D1F1A",
+            opacity: phase === "animating" ? 0.5 : 0,
+            transition:
+              phase === "animating" ? `opacity 0.8s ${easing}` : "none",
+            pointerEvents: "none",
+          }}
+        />
       )}
     </div>
   );

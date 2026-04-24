@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import LineSplit from "@/components/LineSplit";
+import ScrollHeroLineSplit from "@/components/ScrollHeroLineSplit";
 import CTASection from "@/components/CTASection";
 import GebouwMap from "@/components/GebouwMap";
 import VimeoBackground from "@/components/VimeoBackground";
@@ -37,123 +38,6 @@ function DetailLine({
         {children}
       </span>
     </span>
-  );
-}
-
-/* ─── Quote with scroll-triggered line entrance ─── */
-function QuoteLineSplit({
-  text,
-  className = "",
-}: {
-  text: string;
-  className?: string;
-}) {
-  const measureRef = useRef<HTMLParagraphElement>(null);
-  const [lines, setLines] = useState<string[] | null>(null);
-  const [visible, setVisible] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-
-  const splitLines = useCallback(() => {
-    const el = measureRef.current;
-    if (!el) return;
-
-    const content = el.textContent || "";
-    if (!content.trim()) return;
-
-    const textNode = el.firstChild;
-    if (!textNode || textNode.nodeType !== Node.TEXT_NODE) return;
-
-    const range = document.createRange();
-    const lineArray: string[] = [];
-    let lastTop = -1;
-    let lineStart = 0;
-
-    for (let i = 0; i <= content.length; i++) {
-      range.setStart(
-        textNode,
-        i === content.length ? Math.max(0, i - 1) : i
-      );
-      range.setEnd(textNode, i === content.length ? i : i + 1);
-      const rect = range.getBoundingClientRect();
-      const top = Math.round(rect.top);
-
-      if (lastTop !== -1 && top !== lastTop && i > lineStart) {
-        lineArray.push(content.slice(lineStart, i).trimEnd());
-        lineStart = i;
-        while (lineStart < content.length && content[lineStart] === " ") {
-          lineStart++;
-          i = lineStart;
-        }
-      }
-      lastTop = top;
-    }
-
-    const lastLine = content.slice(lineStart).trimEnd();
-    if (lastLine) lineArray.push(lastLine);
-
-    setLines(lineArray);
-  }, []);
-
-  useEffect(() => {
-    splitLines();
-    const onResize = () => setLines(null);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [splitLines]);
-
-  useEffect(() => {
-    if (lines === null) {
-      requestAnimationFrame(() => splitLines());
-    }
-  }, [lines, splitLines]);
-
-  // Intersection observer for scroll-triggered reveal
-  useEffect(() => {
-    if (lines === null) return; // sentinel not in DOM yet
-    const el = sentinelRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [lines]);
-
-  if (lines === null) {
-    return (
-      <p ref={measureRef} className={className} style={{ visibility: "hidden" }}>
-        {text}
-      </p>
-    );
-  }
-
-  return (
-    <div ref={sentinelRef}>
-      <p className={className} aria-label={text.trim()}>
-        {lines.map((line, i) => (
-          <span key={i} className="block overflow-hidden pb-[0.1em] -mb-[0.1em]">
-            <span
-              className="block will-change-transform"
-              style={{
-                transform: visible ? "translateY(0)" : "translateY(110%)",
-                transition: visible
-                  ? `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${0.15 + i * 0.08}s`
-                  : "none",
-              }}
-            >
-              {line}
-            </span>
-          </span>
-        ))}
-      </p>
-    </div>
   );
 }
 
@@ -503,8 +387,11 @@ function QuoteSection({ project }: { project: GebouwProject }) {
       {hasTestimonial && (
         <div className="mt-[4.167vw] bg-blue py-[11.528vw] px-[2.431vw] max-md:mt-6 max-md:py-16 max-md:px-5">
           <div className="flex flex-col items-center">
-            <QuoteLineSplit
+            <ScrollHeroLineSplit
               text={project.quote!}
+              tag="p"
+              delay={0.15}
+              stagger={0.08}
               className="font-heading font-normal text-[4.028vw] leading-[4.097vw] text-off-white text-center max-w-[70.139vw] max-md:text-[28px] max-md:leading-[32px] max-md:max-w-none"
             />
             {project.quoteAuthorImage && (

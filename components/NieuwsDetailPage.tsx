@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import ScrollHeroLineSplit from "@/components/ScrollHeroLineSplit";
 
 interface NewsArticle {
   title: string;
@@ -31,129 +32,6 @@ interface NieuwsDetailData {
   category?: string;
   heroImage?: string;
   body?: any[];
-}
-
-/* ── HeroLineSplit — identical to WonenBijPage ── */
-function HeroLineSplit({
-  text,
-  animate,
-  indent = "0",
-  delay = 0.3,
-  stagger = 0.08,
-  duration = 0.9,
-  className = "",
-}: {
-  text: string;
-  animate: boolean;
-  indent?: string;
-  delay?: number;
-  stagger?: number;
-  duration?: number;
-  className?: string;
-}) {
-  const measureRef = useRef<HTMLHeadingElement>(null);
-  const [lines, setLines] = useState<string[] | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    const update = () => setIsMobile(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  const effectiveIndent = isMobile ? "0" : indent;
-
-  const splitLines = useCallback(() => {
-    const el = measureRef.current;
-    if (!el) return;
-
-    const content = el.textContent || "";
-    if (!content.trim()) return;
-
-    const textNode = el.firstChild;
-    if (!textNode || textNode.nodeType !== Node.TEXT_NODE) return;
-
-    const range = document.createRange();
-    const lineArray: string[] = [];
-    let lastTop = -1;
-    let lineStart = 0;
-
-    for (let i = 0; i <= content.length; i++) {
-      range.setStart(
-        textNode,
-        i === content.length ? Math.max(0, i - 1) : i
-      );
-      range.setEnd(textNode, i === content.length ? i : i + 1);
-      const rect = range.getBoundingClientRect();
-      const top = Math.round(rect.top);
-
-      if (lastTop !== -1 && top !== lastTop && i > lineStart) {
-        lineArray.push(content.slice(lineStart, i).trimEnd());
-        lineStart = i;
-        while (
-          lineStart < content.length &&
-          content[lineStart] === " "
-        ) {
-          lineStart++;
-          i = lineStart;
-        }
-      }
-      lastTop = top;
-    }
-
-    const lastLine = content.slice(lineStart).trimEnd();
-    if (lastLine) lineArray.push(lastLine);
-
-    setLines(lineArray);
-  }, []);
-
-  useEffect(() => {
-    splitLines();
-    const onResize = () => setLines(null);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [splitLines]);
-
-  useEffect(() => {
-    if (lines === null) {
-      requestAnimationFrame(() => splitLines());
-    }
-  }, [lines, splitLines]);
-
-  if (lines === null) {
-    return (
-      <h1
-        ref={measureRef}
-        className={className}
-        style={{ visibility: "hidden", textIndent: effectiveIndent }}
-      >
-        {text}
-      </h1>
-    );
-  }
-
-  return (
-    <h1 className={className} aria-label={text.trim()}>
-      {lines.map((line, i) => (
-        <span key={i} className="block overflow-hidden pb-[0.1em] -mb-[0.1em]">
-          <span
-            className="block will-change-transform"
-            style={{
-              transform: animate ? "translateY(0)" : "translateY(110%)",
-              transition: animate
-                ? `transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay + i * stagger}s`
-                : "none",
-              ...(i === 0 ? { paddingLeft: effectiveIndent } : {}),
-            }}
-          >
-            {line}
-          </span>
-        </span>
-      ))}
-    </h1>
-  );
 }
 
 /* ── Page component ── */
@@ -199,9 +77,9 @@ export default function NieuwsDetailPage({ data }: { data?: NieuwsDetailData } =
     <section className="bg-off-white min-h-screen">
       {/* Title — line-split entrance like Wonen Bij */}
       <div className="pt-[16.736vw] pl-[18.056vw] pr-[2.431vw] max-md:pt-[28vw] max-md:px-5">
-        <HeroLineSplit
+        <ScrollHeroLineSplit
           text={article.title}
-          animate={animate}
+          tag="h1"
           indent="18.75vw"
           delay={0.15}
           stagger={0.08}

@@ -43,11 +43,19 @@ export default function Navbar() {
       const href = pendingLogoHref.current;
       pendingLogoHref.current = null;
 
-      // Capture old page DOM before navigating
+      // Capture old page DOM before navigating and attach the clone to
+      // <body> immediately. Keeping a live copy in the DOM means decoded
+      // image bitmaps survive React's unmount of the originals.
+      // Remove any stale snapshot from a still-in-flight previous nav.
+      document.querySelectorAll("[data-page-snapshot]").forEach((n) => n.remove());
       const container = document.querySelector("[data-page-content]");
       if (container) {
+        const clone = container.cloneNode(true) as HTMLElement;
+        clone.setAttribute("data-page-snapshot", "");
+        clone.style.cssText = `position:fixed;top:${-window.scrollY}px;left:0;right:0;margin:0;z-index:0;pointer-events:none;`;
+        document.body.appendChild(clone);
         window.__pageSnapshot = {
-          html: container.innerHTML,
+          node: clone,
           scrollY: window.scrollY,
         };
       }

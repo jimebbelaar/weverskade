@@ -81,10 +81,21 @@ export default function GebouwMap({ lat, lng, projectName }: GebouwMapProps) {
           this.div = document.createElement("div");
           this.div.style.position = "absolute";
           this.div.style.cursor = "default";
+          // Scale marker ~30% smaller on mobile so the label doesn't dominate
+          // the compact map view. Matches the `max-md:text-[17px]` placeholder.
+          const isMobile =
+            typeof window !== "undefined" &&
+            window.matchMedia("(max-width: 768px)").matches;
+          const fontSize = isMobile ? 17 : 24;
+          const padY = isMobile ? 7 : 10;
+          const padX = isMobile ? 17 : 24;
+          const pinSize = isMobile ? 15 : 22;
+          const pinOffset = isMobile ? 9 : 13;
+          const letterSpacing = isMobile ? -0.34 : -0.48;
           this.div.innerHTML = `
             <div style="display:flex;flex-direction:column;align-items:center;transform:translate(-50%,-100%)">
-              <div style="background:#848F71;padding:10px 24px;font-family:var(--font-heading),serif;font-size:24px;color:#F7F5F0;white-space:nowrap;letter-spacing:-0.48px">${this.label}</div>
-              <div style="width:22px;height:22px;background:#848F71;transform:rotate(45deg);margin-top:-13px"></div>
+              <div style="background:#848F71;padding:${padY}px ${padX}px;font-family:var(--font-heading),serif;font-size:${fontSize}px;color:#F7F5F0;white-space:nowrap;letter-spacing:${letterSpacing}px">${this.label}</div>
+              <div style="width:${pinSize}px;height:${pinSize}px;background:#848F71;transform:rotate(45deg);margin-top:-${pinOffset}px"></div>
             </div>
           `;
           const panes = this.getPanes();
