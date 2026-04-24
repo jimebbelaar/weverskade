@@ -297,7 +297,7 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
                     : "none",
                 }}
               >
-                <VimeoBackground url={heroVideoUrl} poster={heroSlides[0]} />
+                <VimeoBackground url={heroVideoUrl} poster={heroSlides[0]} fit="cover" />
               </div>
             ) : (
               heroSlides.map((src, i) => (

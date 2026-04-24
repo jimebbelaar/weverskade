@@ -233,7 +233,7 @@ export default function SociaalPage({ data }: { data?: SociaalPageData } = {}) {
       <div data-nav-theme="dark">
         <section className="bg-off-black relative overflow-hidden pt-[3.819vw] pb-[3.472vw] px-[2.639vw] max-md:py-10 max-md:px-5">
           {/* Quote text — top left */}
-          <p className="font-heading font-normal text-[1.389vw] leading-[1.2] text-off-white max-w-[22.639vw] max-md:text-[17px] max-md:max-w-none max-md:mb-6">
+          <p className="font-heading font-normal text-[1.389vw] leading-[1.2] text-off-white max-w-[22.639vw] max-md:text-[17px] max-md:max-w-none max-md:mb-6 max-md:pr-20">
             Aandacht voor ruimte is een continu proces. Van ontwikkeling tot
             beheer blijven we betrokken, zodat gebouwen en hun omgeving blijven
             werken en met de tijd beter worden.

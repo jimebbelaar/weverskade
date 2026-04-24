@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import LineSplit from "@/components/LineSplit";
+import { useInView } from "@/hooks/useInView";
 
 /**
  * Privacybeleid (privacy policy) page — static Dutch content, rendered with
@@ -188,13 +189,37 @@ export default function PrivacyPage() {
 
 /* ───── Internals ───── */
 
+const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
+
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  const [ref, inView] = useInView<HTMLDivElement>();
   return (
-    <div className="mt-[5.556vw] max-md:mt-12">
-      <h2 className="font-heading font-normal text-[2.778vw] leading-[1.15] tracking-[-0.056vw] text-off-black max-md:text-[22px] max-md:leading-[26px]">
-        {title}
-      </h2>
-      <div className="mt-[1.944vw] max-md:mt-5">{children}</div>
+    <div ref={ref} className="mt-[5.556vw] max-md:mt-12">
+      <div className="overflow-hidden">
+        <h2
+          className="font-heading font-normal text-[2.778vw] leading-[1.15] tracking-[-0.056vw] text-off-black max-md:text-[22px] max-md:leading-[26px] will-change-transform"
+          style={{
+            transform: inView ? "translateY(0)" : "translateY(110%)",
+            transition: inView
+              ? `transform 0.9s ${EASE} 0s`
+              : "none",
+          }}
+        >
+          {title}
+        </h2>
+      </div>
+      <div
+        className="mt-[1.944vw] max-md:mt-5 will-change-transform"
+        style={{
+          opacity: inView ? 1 : 0,
+          transform: inView ? "translateY(0)" : "translateY(16px)",
+          transition: inView
+            ? `opacity 0.8s ease-out 0.2s, transform 0.9s ${EASE} 0.2s`
+            : "none",
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 }

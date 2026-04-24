@@ -29,12 +29,36 @@ interface FooterData {
   links?: { label: string; url: string }[];
 }
 
+/**
+ * Matches the `bg-*` class used on the footer. Kept in sync with the palette
+ * in globals.css so we can apply the same color to <html> and paint iOS
+ * rubber-band / overscroll areas in the footer color instead of the default.
+ */
+const FOOTER_BG_HEX: Record<string, string> = {
+  "bg-blue": "#717F8B",
+  "bg-green": "#848F71",
+  "bg-off-white": "#F7F5F0",
+  "bg-off-black": "#1D1F1A",
+  "bg-brown": "#9A755D",
+};
+
 export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: FooterData } = {}) {
   const pathname = usePathname();
   const navigate = usePageNavigation();
   const dotRef = useRef<HTMLSpanElement>(null);
   const navContainerRef = useRef<HTMLDivElement>(null);
   const activeLinkRef = useRef<HTMLAnchorElement>(null);
+
+  // Paint <html> in the footer color so iOS overscroll (rubber-band) below the
+  // footer matches instead of exposing a default background.
+  useEffect(() => {
+    const color = FOOTER_BG_HEX[bg] ?? FOOTER_BG_HEX["bg-blue"];
+    const prev = document.documentElement.style.backgroundColor;
+    document.documentElement.style.backgroundColor = color;
+    return () => {
+      document.documentElement.style.backgroundColor = prev;
+    };
+  }, [bg]);
 
   const positionDotAt = useCallback(
     (link: HTMLElement, animate: boolean) => {

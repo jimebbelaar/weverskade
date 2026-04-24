@@ -25,6 +25,7 @@ export default async function Home() {
         title: homeData.heroTitle,
         subtitle: homeData.heroSubtitle,
         backgroundImage: sanityImageUrl(homeData.heroImage, "/images/hero-bg.webp"),
+        videoUrl: homeData.heroVideoUrl,
       }
     : undefined;
 

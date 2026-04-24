@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import VimeoBackground from "@/components/VimeoBackground";
 import { useParallax } from "@/hooks/useParallax";
 import { useEffect, useLayoutEffect, useState } from "react";
 
@@ -8,11 +9,14 @@ interface HeroData {
   title?: string;
   subtitle?: string;
   backgroundImage?: string;
+  videoUrl?: string;
 }
 
 export default function Hero({ data }: { data?: HeroData } = {}) {
   const { bgRef, heroRef } = useParallax();
   const [animate, setAnimate] = useState(false);
+  const heroVideoUrl = data?.videoUrl ?? "https://vimeo.com/1184821093";
+  const heroImage = data?.backgroundImage ?? "/images/hero-bg.webp";
 
   // On direct load, set a flag so the Navbar knows to start hidden
   useLayoutEffect(() => {
@@ -52,7 +56,7 @@ export default function Hero({ data }: { data?: HeroData } = {}) {
       ref={heroRef}
       className="relative w-full h-dvh overflow-hidden"
     >
-      {/* Background — zoom-out entrance on the wrapper, parallax on the image */}
+      {/* Background — zoom-out entrance on the wrapper, parallax on the inner layer */}
       <div
         className="absolute inset-0 z-0 will-change-transform"
         style={{
@@ -62,16 +66,24 @@ export default function Hero({ data }: { data?: HeroData } = {}) {
             : "none",
         }}
       >
-        <Image
-          ref={bgRef}
-          src={data?.backgroundImage ?? "/images/hero-bg.webp"}
-          alt="Weverskade gebouw"
-          fill
-          sizes="100vw"
-          quality={100}
-          className="object-cover object-center"
-          priority
-        />
+        <div
+          ref={bgRef as unknown as React.RefObject<HTMLDivElement>}
+          className="absolute inset-0 will-change-transform"
+        >
+          {heroVideoUrl ? (
+            <VimeoBackground url={heroVideoUrl} poster={heroImage} fit="cover" />
+          ) : (
+            <Image
+              src={heroImage}
+              alt="Weverskade gebouw"
+              fill
+              sizes="100vw"
+              quality={100}
+              className="object-cover object-center"
+              priority
+            />
+          )}
+        </div>
         <div className="absolute inset-0 bg-off-black opacity-30" />
       </div>
 

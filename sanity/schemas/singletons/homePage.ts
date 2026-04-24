@@ -31,6 +31,14 @@ export const homePage = defineType({
       type: 'image',
       options: { hotspot: true },
       fieldset: 'hero',
+      description: 'Wordt gebruikt als poster (vóór de video laadt) en als fallback als er geen Hero video URL is.',
+    }),
+    defineField({
+      name: 'heroVideoUrl',
+      title: 'Hero Vimeo video URL',
+      type: 'url',
+      fieldset: 'hero',
+      description: 'Optioneel. Als ingevuld, wordt de video full-screen als achtergrond afgespeeld (zonder geluid). Bijv. https://vimeo.com/123456789',
     }),
     // Intro
     defineField({
