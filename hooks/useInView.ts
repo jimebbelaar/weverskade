@@ -9,6 +9,12 @@ interface UseInViewOptions {
   rootMargin?: string;
   /** If true, the hook disconnects after the first intersection. */
   once?: boolean;
+  /**
+   * Gate the observer: it will only attach while this is true. Useful when
+   * upstream content is still animating and you want downstream reveals to
+   * wait before they can fire even if already on screen.
+   */
+  startWhen?: boolean;
 }
 
 /**
@@ -21,12 +27,17 @@ interface UseInViewOptions {
 export function useInView<T extends HTMLElement = HTMLDivElement>(
   options: UseInViewOptions = {}
 ): [React.RefObject<T | null>, boolean] {
-  const { threshold = 0.15, rootMargin = "0px 0px -10% 0px", once = true } =
-    options;
+  const {
+    threshold = 0.15,
+    rootMargin = "0px 0px -10% 0px",
+    once = true,
+    startWhen = true,
+  } = options;
   const ref = useRef<T | null>(null);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
+    if (!startWhen) return;
     const el = ref.current;
     if (!el) return;
 
@@ -55,7 +66,7 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [threshold, rootMargin, once]);
+  }, [threshold, rootMargin, once, startWhen]);
 
   return [ref, inView];
 }

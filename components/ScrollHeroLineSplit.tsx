@@ -35,6 +35,7 @@ export default function ScrollHeroLineSplit({
   duration = 0.9,
   className = "",
   tag: Tag = "h2",
+  startWhen = true,
 }: {
   text: string;
   indent?: string;
@@ -43,6 +44,13 @@ export default function ScrollHeroLineSplit({
   duration?: number;
   className?: string;
   tag?: "h1" | "h2" | "h3" | "p";
+  /**
+   * Gate the scroll trigger. When false the IntersectionObserver is never
+   * attached — the reveal waits until the caller flips this true, even if
+   * the element is already on screen. Used to cascade reveals behind an
+   * earlier page animation.
+   */
+  startWhen?: boolean;
 }) {
   const layoutRef = useRef<HTMLElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -190,20 +198,23 @@ export default function ScrollHeroLineSplit({
     requestAnimationFrame(() => splitLines());
   }, [effectiveIndent, splitLines]);
 
-  // Intersection observer for scroll-triggered reveal
+  // Intersection observer for scroll-triggered reveal. Gated on `startWhen`
+  // so callers can hold back the reveal until an earlier animation finishes.
   useEffect(() => {
     if (lines === null) return;
+    if (!startWhen) return;
     const el = sentinelRef.current;
     if (!el) return;
     let raf1 = 0;
     let raf2 = 0;
+    let observer: IntersectionObserver | null = null;
     raf1 = requestAnimationFrame(() => {
       raf2 = requestAnimationFrame(() => {
-        const observer = new IntersectionObserver(
+        observer = new IntersectionObserver(
           ([entry]) => {
             if (entry.isIntersecting) {
               setVisible(true);
-              observer.disconnect();
+              observer?.disconnect();
             }
           },
           { threshold: 0.15 }
@@ -214,8 +225,9 @@ export default function ScrollHeroLineSplit({
     return () => {
       cancelAnimationFrame(raf1);
       cancelAnimationFrame(raf2);
+      observer?.disconnect();
     };
-  }, [lines]);
+  }, [lines, startWhen]);
 
   // Prime the overlay: render once at translateY(110%) then flip on the
   // next frame so the transition always plays, even on cold loads where
