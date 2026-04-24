@@ -60,8 +60,15 @@ export function useImpactScroll() {
     function applyPhase(phase: number) {
       displayedPhase = phase;
 
-      // 1. Word wheel
-      wheelTrack!.style.transform = `translateY(${-phase * 5.056}vw)`;
+      // 1. Word wheel — step must match the block height of each word in the
+      // track. Desktop word is `h-[5.056vw]`; mobile override is `h-[22px]`.
+      // Using a single vw step on mobile would drift a few px per phase (on
+      // 375px, 5.056vw ≈ 19px vs the real 22px block), nudging "mens" and
+      // "ruimte" a little low relative to the neighbouring "voor" word.
+      const step = isMobile()
+        ? `-${phase * 22}px`
+        : `-${phase * 5.056}vw`;
+      wheelTrack!.style.transform = `translateY(${step})`;
 
       const words =
         wheelTrack!.querySelectorAll<HTMLElement>("[data-wheel-word]");

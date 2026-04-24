@@ -91,10 +91,13 @@ export default function Hero({ data }: { data?: HeroData } = {}) {
       <div className="absolute z-2 inset-0 flex items-center pointer-events-none">
         <div className="w-full px-[2.431vw] max-md:px-5">
           <h1
-            className="w-full flex justify-between items-baseline font-heading font-normal text-[2.847vw] leading-[3.194vw] text-off-white tracking-[0.01em] max-md:text-[21px] max-md:leading-[46px]"
+            className="w-full flex justify-between items-end font-heading font-normal text-[2.847vw] leading-[3.194vw] text-off-white tracking-[0.01em] max-md:text-[21px] max-md:leading-[28px]"
           >
-            {(data?.title ?? "Aandacht voor ruimte").split(" ").map((word, i, arr) => (
-              <span key={i} className={`overflow-hidden inline-block ${i === Math.floor(arr.length / 2) ? "text-center" : i === arr.length - 1 ? "text-right" : ""}`}>
+            {(data?.title ?? "Aandacht voor ruimte").split(" ").map((word, i) => (
+              <span
+                key={i}
+                className="overflow-hidden inline-block pb-[0.1em] -mb-[0.1em] align-bottom"
+              >
                 <span
                   className="inline-block will-change-transform"
                   style={{

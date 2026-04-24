@@ -78,30 +78,49 @@ export default function ScrollHeroLineSplit({
     const text = textNode.textContent || "";
     if (!text.trim()) return;
 
-    const range = document.createRange();
-    const lineArray: string[] = [];
-    let lastTop = -1;
-    let lineStart = 0;
-
-    for (let i = 0; i <= text.length; i++) {
-      range.setStart(textNode, i === text.length ? Math.max(0, i - 1) : i);
-      range.setEnd(textNode, i === text.length ? i : i + 1);
-      const rect = range.getBoundingClientRect();
-      const top = Math.round(rect.top);
-
-      if (lastTop !== -1 && top !== lastTop && i > lineStart) {
-        lineArray.push(text.slice(lineStart, i).trimEnd());
-        lineStart = i;
-        while (lineStart < text.length && text[lineStart] === " ") {
-          lineStart++;
-          i = lineStart;
-        }
-      }
-      lastTop = top;
+    // Word-level measurement. The previous character-by-character approach
+    // could split mid-word when sub-pixel rounding made a character's
+    // `rect.top` drift from the previous one ("Weverskade" → "Weve" /
+    // "rskade"). By measuring one word at a time and grouping words with the
+    // same `top`, mid-word splits are structurally impossible.
+    const tokens: { text: string; start: number; end: number; isWhitespace: boolean }[] = [];
+    const tokenRe = /\s+|\S+/g;
+    let m: RegExpExecArray | null;
+    while ((m = tokenRe.exec(text)) !== null) {
+      tokens.push({
+        text: m[0],
+        start: m.index,
+        end: m.index + m[0].length,
+        isWhitespace: /^\s+$/.test(m[0]),
+      });
     }
 
-    const lastLine = text.slice(lineStart).trimEnd();
-    if (lastLine) lineArray.push(lastLine);
+    const range = document.createRange();
+    const lineArray: string[] = [];
+    let currentLine = "";
+    let currentTop: number | null = null;
+
+    for (const tok of tokens) {
+      if (tok.isWhitespace) continue;
+      range.setStart(textNode, tok.start);
+      range.setEnd(textNode, tok.end);
+      // Use the *first* client rect of the word. If a word itself wraps
+      // (extremely long word in a narrow container), this treats it as
+      // belonging to the line where it starts.
+      const rects = range.getClientRects();
+      const rect = rects.length > 0 ? rects[0] : range.getBoundingClientRect();
+      const top = Math.round(rect.top);
+
+      if (currentTop === null || top === currentTop) {
+        currentLine = currentLine ? `${currentLine} ${tok.text}` : tok.text;
+        currentTop = top;
+      } else {
+        lineArray.push(currentLine);
+        currentLine = tok.text;
+        currentTop = top;
+      }
+    }
+    if (currentLine) lineArray.push(currentLine);
 
     setLines((prev) => {
       if (prev && prev.length === lineArray.length && prev.every((l, i) => l === lineArray[i])) {
