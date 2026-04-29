@@ -37,7 +37,7 @@ export const WERKEN_BIJ_PAGE_QUERY = `*[_type == "werkenBijPage"][0]`
 // DOCUMENT QUERIES
 // ============================================
 
-export const ALL_PROJECTS_QUERY = `*[_type == "project" && showInPortfolio == true] | order(orderRank asc) {
+export const ALL_PROJECTS_QUERY = `*[_type == "project"] | order(orderRank asc) {
   _id,
   name,
   slug,

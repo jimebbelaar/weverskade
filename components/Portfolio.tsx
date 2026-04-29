@@ -36,8 +36,7 @@ interface PortfolioData {
 
 export default function Portfolio({ data }: { data?: PortfolioData } = {}) {
   const projects = data?.projects ?? defaultProjects;
-  // 3 pages of the same projects (matching original)
-  const cards = [...projects, ...projects, ...projects];
+  const cards = projects;
   const { currentPage, totalPages, trackRef, nextPage } =
     usePortfolioSlider(cards.length);
   const navigate = usePageNavigation();
@@ -58,45 +57,47 @@ export default function Portfolio({ data }: { data?: PortfolioData } = {}) {
         >
           {data?.linkText ?? "Bekijk gehele portefeuille"}
         </a>
-        <div className="flex items-center gap-[1.389vw]">
-          <span className="font-body font-medium text-[1.389vw] leading-[1.2] text-off-black">
-            Pagina {currentPage + 1} /{totalPages}
-          </span>
-          <button
-            className="w-[3.403vw] h-[1.042vw] text-off-black cursor-pointer transition-opacity duration-200 ease-in-out hover:opacity-60"
-            aria-label="Volgende pagina"
-            onClick={nextPage}
-          >
-            <svg
-              viewBox="0 0 49 15"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-full h-full"
+        {totalPages > 1 && (
+          <div className="flex items-center gap-[1.389vw]">
+            <span className="font-body font-medium text-[1.389vw] leading-[1.2] text-off-black">
+              Pagina {currentPage + 1} /{totalPages}
+            </span>
+            <button
+              className="w-[3.403vw] h-[1.042vw] text-off-black cursor-pointer transition-opacity duration-200 ease-in-out hover:opacity-60"
+              aria-label="Volgende pagina"
+              onClick={nextPage}
             >
-              <line
-                x1="0"
-                y1="7.5"
-                x2="46"
-                y2="7.5"
-                stroke="currentColor"
-                strokeWidth="1.2"
-              />
-              <polyline
-                points="39,1 47,7.5 39,14"
-                stroke="currentColor"
-                strokeWidth="1.2"
+              <svg
+                viewBox="0 0 49 15"
                 fill="none"
-              />
-            </svg>
-          </button>
-        </div>
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-full h-full"
+              >
+                <line
+                  x1="0"
+                  y1="7.5"
+                  x2="46"
+                  y2="7.5"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                />
+                <polyline
+                  points="39,1 47,7.5 39,14"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                  fill="none"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Slider track */}
       <div className="overflow-hidden cursor-grab active:cursor-grabbing select-none">
         <div
           ref={trackRef}
-          className="grid grid-cols-[repeat(9,30.787vw)] gap-[1.389vw] transition-transform duration-600 ease-[cubic-bezier(0.25,0.1,0.25,1)] max-md:grid-cols-[repeat(9,calc(100vw-40px))] max-md:gap-5"
+          className="grid grid-flow-col auto-cols-[30.787vw] gap-[1.389vw] transition-transform duration-600 ease-[cubic-bezier(0.25,0.1,0.25,1)] max-md:auto-cols-[calc(100vw-40px)] max-md:gap-5"
         >
           {cards.map((card, i) => {
             const cardUrl = card.slug ? `/gebouw/${card.slug}` : undefined;
@@ -202,7 +203,7 @@ export default function Portfolio({ data }: { data?: PortfolioData } = {}) {
       </div>
 
       {/* Mobile pagination — below slider */}
-      <div className="hidden max-md:flex justify-between items-center pt-4">
+      <div className={`${totalPages > 1 ? "hidden max-md:flex" : "hidden"} justify-between items-center pt-4`}>
         <span className="font-body font-medium text-[20px] leading-normal text-off-black">
           Pagina {currentPage + 1} /{totalPages}
         </span>

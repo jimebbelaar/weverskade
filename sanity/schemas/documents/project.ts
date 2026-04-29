@@ -49,6 +49,7 @@ export const project = defineType({
           { title: 'Woning', value: 'Woning' },
           { title: 'Retail', value: 'Retail' },
           { title: 'Gemengd', value: 'Gemengd' },
+          { title: 'Overig', value: 'Overig' },
         ],
       },
     }),
@@ -138,13 +139,6 @@ export const project = defineType({
       type: 'boolean',
       group: 'visibility',
       initialValue: false,
-    }),
-    defineField({
-      name: 'showInPortfolio',
-      title: 'Tonen in portefeuille',
-      type: 'boolean',
-      group: 'visibility',
-      initialValue: true,
     }),
     defineField({
       name: 'showInWonen',
