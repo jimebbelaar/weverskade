@@ -54,38 +54,41 @@ export default async function GebouwRoute({ params }: PageProps) {
 
   const localProject = getGebouwBySlug(slug);
 
-  // Build project data: Sanity overrides local
+  // Build project data. When the project exists in Sanity, Sanity is the
+  // single source of truth — empty fields stay empty (the UI hides them) so
+  // editors can see exactly what they've filled in. Local data is only used
+  // for demo slugs that aren't in Sanity at all.
   let project;
   if (sanityProject) {
     project = {
       slug: sanityProject.slug?.current ?? slug,
       name: sanityProject.name,
-      tagline: sanityProject.tagline ?? localProject?.tagline ?? "",
-      address: sanityProject.address ?? localProject?.address ?? "",
-      type: sanityProject.type ?? localProject?.type ?? "",
-      status: sanityProject.status ?? localProject?.status ?? "",
-      size: sanityProject.size ?? localProject?.size ?? "",
-      breeam: sanityProject.breeam ?? localProject?.breeam,
-      epc: sanityProject.epc ?? localProject?.epc,
-      partners: sanityProject.partners ?? localProject?.partners,
-      year: sanityProject.year ?? localProject?.year,
-      wonenBeschikbaar: sanityProject.wonenBeschikbaar ?? localProject?.wonenBeschikbaar ?? false,
-      heroImage: sanityImageUrl(sanityProject.heroImage, localProject?.heroImage ?? "/images/portfolio-hero.webp"),
-      heroVideoUrl: sanityProject.heroVideoUrl ?? localProject?.heroVideoUrl,
-      fullWidthImage: sanityImageUrl(sanityProject.fullWidthImage, localProject?.fullWidthImage ?? "/images/portfolio-hero.webp"),
+      tagline: sanityProject.tagline ?? "",
+      address: sanityProject.address ?? "",
+      type: sanityProject.type ?? "",
+      status: sanityProject.status ?? "",
+      size: sanityProject.size ?? "",
+      breeam: sanityProject.breeam ?? undefined,
+      epc: sanityProject.epc ?? undefined,
+      partners: sanityProject.partners ?? undefined,
+      year: sanityProject.year ?? "",
+      wonenBeschikbaar: sanityProject.wonenBeschikbaar ?? false,
+      heroImage: sanityImageUrl(sanityProject.heroImage, "/images/portfolio-hero.webp"),
+      heroVideoUrl: sanityProject.heroVideoUrl ?? undefined,
+      fullWidthImage: sanityImageUrl(sanityProject.fullWidthImage, "/images/portfolio-hero.webp"),
       smallImages: sanityProject.smallImages?.length > 0
         ? sanityProject.smallImages.map((img: any) => sanityImageUrl(img, "/images/portfolio-1.webp"))
-        : localProject?.smallImages ?? [],
-      descriptionLeft: sanityProject.descriptionLeft ?? localProject?.descriptionLeft ?? "",
-      descriptionRight: sanityProject.descriptionRight ?? localProject?.descriptionRight ?? "",
-      quote: sanityProject.quote ?? localProject?.quote,
-      quoteAuthor: sanityProject.quoteAuthor ?? localProject?.quoteAuthor,
+        : [],
+      descriptionLeft: sanityProject.descriptionLeft ?? "",
+      descriptionRight: sanityProject.descriptionRight ?? "",
+      quote: sanityProject.quote ?? undefined,
+      quoteAuthor: sanityProject.quoteAuthor ?? undefined,
       quoteAuthorImage: sanityProject.quoteAuthorImage
-        ? sanityImageUrl(sanityProject.quoteAuthorImage, localProject?.quoteAuthorImage ?? "")
-        : localProject?.quoteAuthorImage,
+        ? sanityImageUrl(sanityProject.quoteAuthorImage, "")
+        : undefined,
       mapCoordinates: {
-        lat: sanityProject.mapLat ?? localProject?.mapCoordinates?.lat ?? 51.92,
-        lng: sanityProject.mapLng ?? localProject?.mapCoordinates?.lng ?? 4.25,
+        lat: sanityProject.mapLat ?? 51.92,
+        lng: sanityProject.mapLng ?? 4.25,
       },
     };
   } else if (localProject) {

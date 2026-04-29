@@ -14,7 +14,7 @@ import {
   ALL_TEAM_QUERY,
   FOOTER_QUERY,
 } from "@/sanity/lib/queries";
-import { sanityImageUrl } from "@/sanity/lib/helpers";
+import { sanityImageUrl, sanityImageSrcSet } from "@/sanity/lib/helpers";
 
 export const metadata = {
   title: "Over ons | Weverskade",
@@ -52,11 +52,15 @@ export default async function OverOns() {
     { value: "x", label: "Hier ruimte voor nog een feit" },
   ];
 
-  const teamMembers = teamData?.map((t: any) => ({
-    name: t.name,
-    function: t.function,
-    image: sanityImageUrl(t.image, "/images/team-placeholder.webp"),
-  }));
+  const teamMembers = teamData?.map((t: any) => {
+    const { src, srcSet } = sanityImageSrcSet(t.image, "/images/team-placeholder.webp");
+    return {
+      name: t.name,
+      function: t.function,
+      image: src,
+      imageSrcSet: srcSet,
+    };
+  });
 
   const impactData = pageData
     ? {

@@ -158,20 +158,30 @@ export default function GebouwPage({ project }: GebouwPageProps) {
     console.log("Form submitted:", formData);
   };
 
-  // Build detail lines array for staggered animation
+  // Build detail lines array for staggered animation. Empty fields are
+  // omitted so editors see exactly what they've entered in Sanity.
   const detailLines: string[] = [];
   if (project.wonenBeschikbaar) {
-    detailLines.push(project.address, project.status, project.wonenSize || project.size);
-    if (project.epc) detailLines.push(project.epc);
+    const wonenSize = project.wonenSize || project.size;
+    [project.address, project.status, wonenSize, project.epc].forEach((v) => {
+      if (v) detailLines.push(v);
+    });
   } else {
-    detailLines.push(project.address, project.type, project.status, project.size);
-    if (project.breeam) detailLines.push(project.breeam);
-    if (project.epc) detailLines.push(project.epc);
+    [
+      project.address,
+      project.type,
+      project.status,
+      project.size,
+      project.breeam,
+      project.epc,
+    ].forEach((v) => {
+      if (v) detailLines.push(v);
+    });
   }
 
   const partnerLines: string[] = [];
   if (project.partners) partnerLines.push(project.partners);
-  partnerLines.push(project.year);
+  if (project.year) partnerLines.push(project.year);
 
   const BASE_DETAIL_DELAY = 0.35;
   const DETAIL_STAGGER = 0.06;

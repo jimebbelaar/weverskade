@@ -87,28 +87,31 @@ export default function Hero({ data }: { data?: HeroData } = {}) {
         <div className="absolute inset-0 bg-off-black opacity-30" />
       </div>
 
-      {/* Hero Title — staggered word reveal */}
+      {/* Hero Title — staggered word reveal. Justify+justify-last keeps the
+          original "Aandacht  voor  ruimte" spread for single-line titles
+          while letting longer titles wrap naturally over multiple lines. */}
       <div className="absolute z-2 inset-0 flex items-center pointer-events-none">
         <div className="w-full px-[2.431vw] max-md:px-5">
           <h1
-            className="w-full flex justify-between items-end font-heading font-normal text-[2.847vw] leading-[3.194vw] text-off-white tracking-[0.01em] max-md:text-[21px] max-md:leading-[28px]"
+            className="font-heading font-normal text-[2.847vw] leading-[3.194vw] text-off-white tracking-[0.01em] max-md:text-[21px] max-md:leading-[28px]"
+            style={{ textAlign: "justify", textAlignLast: "justify" }}
           >
-            {(data?.title ?? "Aandacht voor ruimte").split(" ").map((word, i) => (
-              <span
-                key={i}
-                className="overflow-hidden inline-block pb-[0.1em] -mb-[0.1em] align-bottom"
-              >
-                <span
-                  className="inline-block will-change-transform"
-                  style={{
-                    transform: animate ? "translateY(0)" : "translateY(110%)",
-                    transition: animate
-                      ? `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${0.15 + i * 0.12}s`
-                      : "none",
-                  }}
-                >
-                  {word}
+            {(data?.title ?? "Aandacht voor ruimte").split(/\s+/).filter(Boolean).map((word, i, arr) => (
+              <span key={i}>
+                <span className="overflow-hidden inline-block pb-[0.1em] -mb-[0.1em] align-bottom">
+                  <span
+                    className="inline-block will-change-transform"
+                    style={{
+                      transform: animate ? "translateY(0)" : "translateY(110%)",
+                      transition: animate
+                        ? `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${0.15 + i * 0.06}s`
+                        : "none",
+                    }}
+                  >
+                    {word}
+                  </span>
                 </span>
+                {i < arr.length - 1 ? " " : ""}
               </span>
             ))}
           </h1>
