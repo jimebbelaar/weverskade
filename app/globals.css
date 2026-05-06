@@ -10,6 +10,13 @@
   --font-body: var(--font-body);
 }
 
+/* The site has a single light palette. Declaring this stops iOS Safari
+   from overriding meta theme-color (and the rubber-band area) with the
+   system dark default when the device is in dark mode. */
+html {
+  color-scheme: light;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
