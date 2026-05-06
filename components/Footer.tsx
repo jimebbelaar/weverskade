@@ -155,48 +155,51 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
               ))}
             </nav>
           </div>
-        </div>
 
-        {/* Address column */}
-        <div>
-          <div className="font-body font-medium text-[1.181vw] leading-[1.458vw] text-off-white">
-            {(() => {
-              const address = data?.address ?? "Cornelis van der Lelylaan 4";
-              const postalCode = data?.postalCode ?? "3147 PB Maassluis";
-              const country = data?.country ?? "Netherlands";
-              const phone = data?.phone ?? "+31(0)10 599 6300";
-              const email = data?.email ?? "info@weverskade.com";
-              return (
-                <>
-                  <a
-                    href={mapsHref(address, postalCode, country)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block text-off-white no-underline hover:opacity-70 transition-opacity duration-200"
-                  >
-                    <p>{address}</p>
-                    <p>{postalCode}</p>
-                    <p>{country}</p>
-                  </a>
-                  <p>
+          {/* Address column */}
+          <div>
+            <div className="font-body font-medium text-[1.181vw] leading-[1.458vw] text-off-white">
+              {(() => {
+                const address = data?.address ?? "Cornelis van der Lelylaan 4";
+                const postalCode = data?.postalCode ?? "3147 PB Maassluis";
+                const country = data?.country ?? "Netherlands";
+                const phone = data?.phone ?? "+31(0)10 599 6300";
+                const email = data?.email ?? "info@weverskade.com";
+                return (
+                  <>
                     <a
-                      href={telHref(phone)}
-                      className="text-off-white no-underline hover:opacity-70 transition-opacity duration-200"
+                      href={mapsHref(address, postalCode, country)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onMouseEnter={moveDot}
+                      className="block text-off-white no-underline hover:opacity-70 transition-opacity duration-200"
                     >
-                      {phone}
+                      <p>{address}</p>
+                      <p>{postalCode}</p>
+                      <p>{country}</p>
                     </a>
-                  </p>
-                  <p>
-                    <a
-                      href={`mailto:${email}`}
-                      className="text-off-white no-underline hover:opacity-70 transition-opacity duration-200"
-                    >
-                      {email}
-                    </a>
-                  </p>
-                </>
-              );
-            })()}
+                    <p>
+                      <a
+                        href={telHref(phone)}
+                        onMouseEnter={moveDot}
+                        className="text-off-white no-underline hover:opacity-70 transition-opacity duration-200"
+                      >
+                        {phone}
+                      </a>
+                    </p>
+                    <p>
+                      <a
+                        href={`mailto:${email}`}
+                        onMouseEnter={moveDot}
+                        className="text-off-white no-underline hover:opacity-70 transition-opacity duration-200"
+                      >
+                        {email}
+                      </a>
+                    </p>
+                  </>
+                );
+              })()}
+            </div>
           </div>
         </div>
       </div>
