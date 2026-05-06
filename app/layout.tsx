@@ -85,6 +85,16 @@ export default function RootLayout({
         <PageTransition>
           {children}
         </PageTransition>
+        {/* iOS 26 Safari samples the bg of fixed/sticky elements near
+            the viewport edges to tint the toolbar and rubber-band area.
+            This invisible strip (≥6px, full-width) at the bottom edge
+            is the qualifying element Safari samples, forcing off-white
+            instead of inheriting from Navbar's dynamic theme color. */}
+        <div
+          aria-hidden
+          className="fixed bottom-0 left-0 right-0 h-[8px] bg-off-white pointer-events-none"
+          style={{ zIndex: -1 }}
+        />
       </body>
     </html>
   );
