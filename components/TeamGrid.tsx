@@ -240,12 +240,12 @@ export default function TeamGrid({ members }: { members?: TeamMemberData[] } = {
       {/* Mobile — paginated swipe carousel */}
       <div className="hidden max-md:block">
         <div className="flex justify-between items-center mb-4">
-          <p className="font-body font-medium text-[15px] leading-[1.2] text-off-white">
+          <p className="font-body font-medium text-[17px] leading-[1.2] text-off-white">
             Weverskade
           </p>
           {mobileTotalPages > 1 && (
             <div className="flex items-center gap-4">
-              <p className="font-body font-medium text-[15px] leading-[1.2] text-off-white">
+              <p className="font-body font-medium text-[17px] leading-[1.2] text-off-white">
                 Pagina {mobilePage + 1} /{mobileTotalPages}
               </p>
               <button
@@ -294,7 +294,7 @@ export default function TeamGrid({ members }: { members?: TeamMemberData[] } = {
             return (
               <div
                 key={`mobile-page-${pageIndex}`}
-                className="w-full shrink-0 snap-start grid grid-cols-2 gap-3"
+                className="w-full shrink-0 snap-start grid grid-cols-2 gap-3 content-start"
               >
                 {pageMembers.map((item, i) => {
                   const id = `${pageIndex}-${i}`;
