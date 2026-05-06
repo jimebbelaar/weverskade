@@ -37,14 +37,17 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
   const navContainerRef = useRef<HTMLDivElement>(null);
   const activeLinkRef = useRef<HTMLAnchorElement>(null);
 
-  // Paint <html> + meta theme-color in the footer color so iOS overscroll
-  // (rubber-band) below the footer matches. Modern iOS Safari uses
-  // theme-color for the bottom rubber-band area, not the html background.
+  // Paint <html>, <body>, and meta theme-color in the footer color so
+  // overscroll / rubber-band below the footer matches. iOS Safari paints
+  // the rubber-band area from <body> bg, not html or theme-color, so all
+  // three are updated for cross-browser coverage.
   useEffect(() => {
     const color = FOOTER_BG_HEX[bg] ?? FOOTER_BG_HEX["bg-blue"];
 
     const prevHtmlBg = document.documentElement.style.backgroundColor;
+    const prevBodyBg = document.body.style.backgroundColor;
     document.documentElement.style.backgroundColor = color;
+    document.body.style.backgroundColor = color;
 
     let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
     let created = false;
@@ -59,6 +62,7 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
 
     return () => {
       document.documentElement.style.backgroundColor = prevHtmlBg;
+      document.body.style.backgroundColor = prevBodyBg;
       if (created) {
         meta?.remove();
       } else if (meta) {
