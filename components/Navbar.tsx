@@ -187,7 +187,7 @@ export default function Navbar() {
       />
 
       {/* Header bar */}
-      <div className="relative flex justify-between items-center pt-[1.979vw] pr-[1.944vw] pb-[1.979vw] pl-[2.431vw] max-md:pt-2.5 max-md:pr-4 max-md:pb-2.5 max-md:pl-4">
+      <div className="relative flex justify-between items-center pt-[1.979vw] pr-[1.944vw] pb-[1.979vw] pl-[2.431vw] max-md:pt-5 max-md:pr-4 max-md:pb-2.5 max-md:pl-4">
         <a
           href="/"
           onClick={(e) => {
