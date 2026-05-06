@@ -519,9 +519,9 @@ function WonenFormSection({
                   className="shrink-0 mt-[0.208vw] w-[0.764vw] h-[0.764vw] border border-off-black appearance-none checked:bg-green checked:border-green cursor-pointer max-md:w-[16px] max-md:h-[16px] max-md:mt-[2px]"
                 />
                 <span className="font-body font-normal text-[0.764vw] leading-normal text-off-black max-w-[27.431vw] max-md:text-[11px] max-md:max-w-none">
-                  Ik ga akkoord met de{" "}
-                  <a href="/voorwaarden" className="underline decoration-solid">
-                    algemene voorwaarden
+                  Ik ga akkoord met het{" "}
+                  <a href="/privacybeleid" className="underline decoration-solid">
+                    privacybeleid
                   </a>{" "}
                   en het gebruiken van mijn gegevens gebruiken om contact met op
                   te nemen.
