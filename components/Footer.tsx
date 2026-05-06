@@ -29,6 +29,17 @@ interface FooterData {
   links?: { label: string; url: string }[];
 }
 
+const LINKEDIN_URL = "https://www.linkedin.com/company/weverskade";
+
+function mapsHref(address: string, postalCode: string, country: string) {
+  const query = [address, postalCode, country].filter(Boolean).join(", ");
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+}
+
+function telHref(phone: string) {
+  return `tel:${phone.replace(/[^\d+]/g, "")}`;
+}
+
 export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: FooterData } = {}) {
   const pathname = usePathname();
   const navigate = usePageNavigation();
@@ -149,11 +160,43 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
         {/* Address column */}
         <div>
           <div className="font-body font-medium text-[1.181vw] leading-[1.458vw] text-off-white">
-            <p>{data?.address ?? "Cornelis van der Lelylaan 4"}</p>
-            <p>{data?.postalCode ?? "3147 PB Maassluis"}</p>
-            <p>{data?.country ?? "Netherlands"}</p>
-            <p>{data?.phone ?? "+31(0)10 599 6300"}</p>
-            <p>{data?.email ?? "info@weverskade.com"}</p>
+            {(() => {
+              const address = data?.address ?? "Cornelis van der Lelylaan 4";
+              const postalCode = data?.postalCode ?? "3147 PB Maassluis";
+              const country = data?.country ?? "Netherlands";
+              const phone = data?.phone ?? "+31(0)10 599 6300";
+              const email = data?.email ?? "info@weverskade.com";
+              return (
+                <>
+                  <a
+                    href={mapsHref(address, postalCode, country)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-off-white no-underline hover:opacity-70 transition-opacity duration-200"
+                  >
+                    <p>{address}</p>
+                    <p>{postalCode}</p>
+                    <p>{country}</p>
+                  </a>
+                  <p>
+                    <a
+                      href={telHref(phone)}
+                      className="text-off-white no-underline hover:opacity-70 transition-opacity duration-200"
+                    >
+                      {phone}
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      href={`mailto:${email}`}
+                      className="text-off-white no-underline hover:opacity-70 transition-opacity duration-200"
+                    >
+                      {email}
+                    </a>
+                  </p>
+                </>
+              );
+            })()}
           </div>
         </div>
       </div>
@@ -188,16 +231,57 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
 
         {/* Two-column contact info */}
         <div className="flex mt-6">
-          <div className="flex-1 font-body font-medium text-[13px] leading-[20px] text-off-white">
-            <p>{data?.address ?? "Cornelis van der Lelylaan 4"}</p>
-            <p>{data?.postalCode ?? "3147 PB Maassluis"}</p>
-            <p>{data?.country ?? "Netherlands"}</p>
-          </div>
-          <div className="flex-1 font-body font-medium text-[13px] leading-[20px] text-off-white">
-            <p>{data?.phone ?? "+31 (0)10 599 6300"}</p>
-            <p>{data?.email ?? "info@weverskade.com"}</p>
-            <p>Onze LinkedIn pagina</p>
-          </div>
+          {(() => {
+            const address = data?.address ?? "Cornelis van der Lelylaan 4";
+            const postalCode = data?.postalCode ?? "3147 PB Maassluis";
+            const country = data?.country ?? "Netherlands";
+            const phone = data?.phone ?? "+31 (0)10 599 6300";
+            const email = data?.email ?? "info@weverskade.com";
+            return (
+              <>
+                <div className="flex-1 font-body font-medium text-[13px] leading-[20px] text-off-white">
+                  <a
+                    href={mapsHref(address, postalCode, country)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-off-white no-underline hover:opacity-70 transition-opacity duration-200"
+                  >
+                    <p>{address}</p>
+                    <p>{postalCode}</p>
+                    <p>{country}</p>
+                  </a>
+                </div>
+                <div className="flex-1 font-body font-medium text-[13px] leading-[20px] text-off-white">
+                  <p>
+                    <a
+                      href={telHref(phone)}
+                      className="text-off-white no-underline hover:opacity-70 transition-opacity duration-200"
+                    >
+                      {phone}
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      href={`mailto:${email}`}
+                      className="text-off-white no-underline hover:opacity-70 transition-opacity duration-200"
+                    >
+                      {email}
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      href={LINKEDIN_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-off-white no-underline hover:opacity-70 transition-opacity duration-200"
+                    >
+                      Onze LinkedIn pagina
+                    </a>
+                  </p>
+                </div>
+              </>
+            );
+          })()}
         </div>
       </div>
 
