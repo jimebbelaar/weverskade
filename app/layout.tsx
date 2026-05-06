@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
@@ -67,6 +67,12 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+// Brand off-white covers the iOS address bar tint and the rubber-band
+// overscroll area at top and bottom on every page.
+export const viewport: Viewport = {
+  themeColor: "#F7F5F0",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -74,7 +80,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="nl" className={`${arizonaMix.variable} ${gtStandard.variable}`}>
-      <body className="antialiased text-off-black font-body font-medium">
+      <body className="antialiased bg-off-white text-off-black font-body font-medium">
         <Navbar />
         <PageTransition>
           {children}

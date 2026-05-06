@@ -4,15 +4,12 @@ import FooterReveal from "@/components/FooterReveal";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import { ALL_NIEUWS_QUERY, FOOTER_QUERY } from "@/sanity/lib/queries";
 import { sanityImageUrl, formatSanityDate } from "@/sanity/lib/helpers";
-import { footerViewport } from "@/lib/footer-theme";
 
 export const metadata = {
   title: "Nieuws | Weverskade",
   description:
     "Het laatste nieuws van Weverskade over vastgoedontwikkeling en beheer.",
 };
-
-export const viewport = footerViewport("bg-brown");
 
 export default async function Nieuws() {
   const [newsData, footerData] = await Promise.all([

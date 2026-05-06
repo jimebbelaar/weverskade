@@ -3,9 +3,6 @@ import Footer from "@/components/Footer";
 import FooterReveal from "@/components/FooterReveal";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import { FOOTER_QUERY } from "@/sanity/lib/queries";
-import { footerViewport } from "@/lib/footer-theme";
-
-export const viewport = footerViewport("bg-blue");
 
 export const metadata = {
   title: "Privacybeleid | Weverskade",

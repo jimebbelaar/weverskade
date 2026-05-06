@@ -3,7 +3,6 @@
 import { useRef, useCallback, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { usePageNavigation } from "@/hooks/usePageNavigation";
-import { FOOTER_BG_HEX } from "@/lib/footer-theme";
 
 const navCol1 = [
   { label: "Home", href: "/" },
@@ -36,37 +35,6 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
   const dotRef = useRef<HTMLSpanElement>(null);
   const navContainerRef = useRef<HTMLDivElement>(null);
   const activeLinkRef = useRef<HTMLAnchorElement>(null);
-
-  // Body bg (the canvas color iOS Safari paints behind rubber-band) is
-  // set via the server-rendered <style> below. Also update html bg + the
-  // meta theme-color so non-Safari browsers and the iOS address bar pick
-  // up the change during SPA navigation between pages.
-  useEffect(() => {
-    const color = FOOTER_BG_HEX[bg] ?? FOOTER_BG_HEX["bg-blue"];
-
-    const prevHtmlBg = document.documentElement.style.backgroundColor;
-    document.documentElement.style.backgroundColor = color;
-
-    let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-    let created = false;
-    if (!meta) {
-      meta = document.createElement("meta");
-      meta.name = "theme-color";
-      document.head.appendChild(meta);
-      created = true;
-    }
-    const prevThemeColor = meta.content;
-    meta.content = color;
-
-    return () => {
-      document.documentElement.style.backgroundColor = prevHtmlBg;
-      if (created) {
-        meta?.remove();
-      } else if (meta) {
-        meta.content = prevThemeColor;
-      }
-    };
-  }, [bg]);
 
   const positionDotAt = useCallback(
     (link: HTMLElement, animate: boolean) => {
@@ -108,13 +76,7 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
     }
   }, [positionDotAt]);
 
-  const bgColor = FOOTER_BG_HEX[bg] ?? FOOTER_BG_HEX["bg-blue"];
-
   return (
-    <>
-      {/* iOS Safari paints rubber-band overscroll with body bg, so
-          override it server-side to match this page's footer color. */}
-      <style>{`body{background-color:${bgColor}}`}</style>
     <footer className={`${bg} h-dvh flex flex-col justify-between pt-[4.028vw] pb-[3.333vw] pl-[2.639vw] pr-[2.431vw] max-md:h-auto max-md:pt-5 max-md:pb-5 max-md:px-5`}>
       {/* Desktop top content columns */}
       <div className="flex max-md:hidden">
@@ -300,6 +262,5 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
         </g>
       </svg>
     </footer>
-    </>
   );
 }

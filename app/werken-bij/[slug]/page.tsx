@@ -9,9 +9,6 @@ import {
   ALL_VACATURE_SLUGS_QUERY,
   FOOTER_QUERY,
 } from "@/sanity/lib/queries";
-import { footerViewport } from "@/lib/footer-theme";
-
-export const viewport = footerViewport("bg-green");
 
 interface PageProps {
   params: Promise<{ slug: string }>;

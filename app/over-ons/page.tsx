@@ -15,9 +15,6 @@ import {
   FOOTER_QUERY,
 } from "@/sanity/lib/queries";
 import { sanityImageUrl, sanityImageSrcSet } from "@/sanity/lib/helpers";
-import { footerViewport } from "@/lib/footer-theme";
-
-export const viewport = footerViewport("bg-off-black");
 
 export const metadata = {
   title: "Over ons | Weverskade",

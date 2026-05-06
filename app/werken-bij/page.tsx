@@ -7,9 +7,6 @@ import {
   ALL_VACATURES_QUERY,
   FOOTER_QUERY,
 } from "@/sanity/lib/queries";
-import { footerViewport } from "@/lib/footer-theme";
-
-export const viewport = footerViewport("bg-blue");
 
 export const metadata = {
   title: "Werken bij | Weverskade",
