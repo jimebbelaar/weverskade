@@ -331,7 +331,7 @@ export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {
                   : "none",
               }}
             >
-              Project slideshow
+              Project showreel
             </p>
           </span>
         </div>
