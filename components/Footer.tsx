@@ -55,8 +55,10 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
 
       const containerRect = container.getBoundingClientRect();
       const linkRect = link.getBoundingClientRect();
+      const parsedLineHeight = parseFloat(getComputedStyle(link).lineHeight);
+      const lineHeight = Number.isFinite(parsedLineHeight) ? parsedLineHeight : linkRect.height;
       const x = linkRect.left - containerRect.left;
-      const y = linkRect.top - containerRect.top + linkRect.height / 2;
+      const y = linkRect.top - containerRect.top + lineHeight / 2;
 
       dot.style.transition = animate
         ? "transform 0.45s cubic-bezier(0.4, 0, 0, 1), opacity 0.2s ease"
