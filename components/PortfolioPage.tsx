@@ -155,7 +155,7 @@ const defaultProjects: PortfolioProject[] = [
 
 export default function PortfolioPage({ data }: { data?: PortfolioPageData } = {}) {
   const projects = data?.projects ?? defaultProjects;
-  const heroVideoUrl = data?.heroVideoUrl ?? "https://vimeo.com/1184821093";
+  const heroVideoUrl = data?.heroVideoUrl;
   // Hero slideshow (fallback when no video URL): hero image first, then all unique project images
   const heroSlides = data?.heroImages ?? [
     "/images/portfolio-hero.webp",

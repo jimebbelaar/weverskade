@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
@@ -66,12 +66,6 @@ export async function generateMetadata(): Promise<Metadata> {
     },
   };
 }
-
-// Brand theme color — paints mobile browser chrome (iOS Safari top bar /
-// Android address bar / PWA splash) in the same green as the logo tile.
-export const viewport: Viewport = {
-  themeColor: "#848F71",
-};
 
 export default function RootLayout({
   children,

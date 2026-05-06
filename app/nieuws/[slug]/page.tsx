@@ -9,6 +9,9 @@ import {
   FOOTER_QUERY,
 } from "@/sanity/lib/queries";
 import { sanityImageUrl, formatSanityDate } from "@/sanity/lib/helpers";
+import { footerViewport } from "@/lib/footer-theme";
+
+export const viewport = footerViewport("bg-green");
 
 interface PageProps {
   params: Promise<{ slug: string }>;
