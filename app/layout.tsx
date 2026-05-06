@@ -74,7 +74,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="nl" className={`${arizonaMix.variable} ${gtStandard.variable}`}>
-      <body className="antialiased bg-off-white text-off-black font-body font-medium">
+      <body className="antialiased text-off-black font-body font-medium">
         <Navbar />
         <PageTransition>
           {children}

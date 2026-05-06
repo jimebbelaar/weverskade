@@ -37,17 +37,15 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
   const navContainerRef = useRef<HTMLDivElement>(null);
   const activeLinkRef = useRef<HTMLAnchorElement>(null);
 
-  // Paint <html>, <body>, and meta theme-color in the footer color so
-  // overscroll / rubber-band below the footer matches. iOS Safari paints
-  // the rubber-band area from <body> bg, not html or theme-color, so all
-  // three are updated for cross-browser coverage.
+  // Body bg (the canvas color iOS Safari paints behind rubber-band) is
+  // set via the server-rendered <style> below. Also update html bg + the
+  // meta theme-color so non-Safari browsers and the iOS address bar pick
+  // up the change during SPA navigation between pages.
   useEffect(() => {
     const color = FOOTER_BG_HEX[bg] ?? FOOTER_BG_HEX["bg-blue"];
 
     const prevHtmlBg = document.documentElement.style.backgroundColor;
-    const prevBodyBg = document.body.style.backgroundColor;
     document.documentElement.style.backgroundColor = color;
-    document.body.style.backgroundColor = color;
 
     let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
     let created = false;
@@ -62,7 +60,6 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
 
     return () => {
       document.documentElement.style.backgroundColor = prevHtmlBg;
-      document.body.style.backgroundColor = prevBodyBg;
       if (created) {
         meta?.remove();
       } else if (meta) {
@@ -111,7 +108,13 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
     }
   }, [positionDotAt]);
 
+  const bgColor = FOOTER_BG_HEX[bg] ?? FOOTER_BG_HEX["bg-blue"];
+
   return (
+    <>
+      {/* iOS Safari paints rubber-band overscroll with body bg, so
+          override it server-side to match this page's footer color. */}
+      <style>{`body{background-color:${bgColor}}`}</style>
     <footer className={`${bg} h-dvh flex flex-col justify-between pt-[4.028vw] pb-[3.333vw] pl-[2.639vw] pr-[2.431vw] max-md:h-auto max-md:pt-5 max-md:pb-5 max-md:px-5`}>
       {/* Desktop top content columns */}
       <div className="flex max-md:hidden">
@@ -297,5 +300,6 @@ export default function Footer({ bg = "bg-blue", data }: { bg?: string; data?: F
         </g>
       </svg>
     </footer>
+    </>
   );
 }

@@ -17,6 +17,14 @@ html {
   color-scheme: light;
 }
 
+/* Body background defaults to off-white, but each page overrides it via
+   the <style> tag rendered by Footer (set to the footer's color). iOS
+   Safari paints the rubber-band overscroll area with the body bg, so
+   matching it to the footer keeps the strip below the page consistent. */
+body {
+  background-color: #F7F5F0;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
