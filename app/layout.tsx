@@ -81,20 +81,27 @@ export default function RootLayout({
   return (
     <html lang="nl" className={`${arizonaMix.variable} ${gtStandard.variable}`}>
       <body className="antialiased bg-off-white text-off-black font-body font-medium">
+        {/* iOS 26 Safari samples bg-color of fixed/sticky elements near
+            the viewport edges to tint the toolbar/rubber-band. These
+            invisible off-white strips (top + bottom) are the qualifying
+            elements Safari samples, forcing off-white tinting on every
+            page regardless of the Navbar's dynamic theme color or the
+            Impact section's sticky bg-green. Rendered before <Navbar>
+            so they're the first qualifying elements in DOM order. */}
+        <div
+          aria-hidden
+          className="fixed top-0 left-0 right-0 h-[12px] bg-off-white pointer-events-none"
+          style={{ zIndex: -1 }}
+        />
+        <div
+          aria-hidden
+          className="fixed bottom-0 left-0 right-0 h-[12px] bg-off-white pointer-events-none"
+          style={{ zIndex: -1 }}
+        />
         <Navbar />
         <PageTransition>
           {children}
         </PageTransition>
-        {/* iOS 26 Safari samples the bg of fixed/sticky elements near
-            the viewport edges to tint the toolbar and rubber-band area.
-            This invisible strip (≥6px, full-width) at the bottom edge
-            is the qualifying element Safari samples, forcing off-white
-            instead of inheriting from Navbar's dynamic theme color. */}
-        <div
-          aria-hidden
-          className="fixed bottom-0 left-0 right-0 h-[8px] bg-off-white pointer-events-none"
-          style={{ zIndex: -1 }}
-        />
       </body>
     </html>
   );
