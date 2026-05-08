@@ -28,7 +28,11 @@ export default function Impact({ data }: { data?: ImpactData } = {}) {
 
   return (
     <div ref={scrollRef} className="h-[200vh] relative pointer-events-none">
-      <section className="sticky top-0 h-dvh w-full overflow-hidden pointer-events-auto">
+      {/* Outer sticky uses bg-off-white so iOS 26 Safari samples off-white
+          for its toolbar/rubber-band tint as the user scrolls into this
+          section. The inner absolute div below keeps the visible bg-green
+          design — it's not sticky/fixed, so Safari ignores it. */}
+      <section className="sticky top-0 h-dvh w-full overflow-hidden pointer-events-auto bg-off-white">
         {/* Green background */}
         <div className="absolute inset-0 bg-green z-0" />
 
